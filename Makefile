@@ -13,10 +13,12 @@ ifneq (,$(wildcard $(ENV_PATH)))
 else
 	$(call colorize,1,"Creating default local env at: $(ENV_PATH)")
 	touch $(ENV_PATH)
+	echo "import os" >> $(ENV_PATH)
+	echo "_BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))" >> $(ENV_PATH)
 	echo "SECRET_KEY = 'super_secret'" >> $(ENV_PATH)
 	echo "DATABASE = {" >> $(ENV_PATH)
 	echo "    'ENGINE': 'django.db.backends.sqlite3'," >> $(ENV_PATH)
-	echo "    'NAME': os.path.join(BASE_DIR, 'db.sqlite3')," >> $(ENV_PATH)
+	echo "    'NAME': os.path.join(_BASE_DIR, 'db.sqlite3')," >> $(ENV_PATH)
 	echo "}" >> $(ENV_PATH)
 	$(call colorize,2,"Done")
 endif
