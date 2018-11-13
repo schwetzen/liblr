@@ -1,5 +1,33 @@
-SRC_DIR  = src
-ENV_PATH = ./$(SRC_DIR)/liblr/env.py
+SRC_DIR     = src
+VENV        = venv
+PYTHON      = $(VENV)/bin/python
+MANAGE      = $(SRC_DIR)/manage.py
+ENV_PATH    = ./$(SRC_DIR)/liblr/env.py
+
+
+all: check
+
+.PHONY: check
+.SILENT: check
+check: $(PYTHON) $(MANAGE)
+	$(call colorize,6,"Running default check")
+	$(PYTHON) $(MANAGE) check
+	$(call colorize,6,"Running migration dry-run")
+	$(PYTHON) $(MANAGE) makemigrations --dry-run
+
+
+.PHONY: makemigrations
+.SILENT: makemigrations
+makemigrations: $(PYTHON) $(MANAGE)
+	$(call colorize,1,"Creating migrations")
+	$(PYTHON) $(MANAGE) makemigrations
+
+
+.PHONY: migrate
+.SILENT: migrate
+migrate: $(PYTHON) $(MANAGE)
+	$(call colorize,1,"Running migrations")
+	$(PYTHON) $(MANAGE) migrate
 
 
 env: $(ENV_PATH)
