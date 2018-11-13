@@ -30,6 +30,12 @@ migrate: $(PYTHON) $(MANAGE)
 	$(PYTHON) $(MANAGE) migrate
 
 
+.PHONY: run
+.SILENT: run
+run: $(PYTHON) $(MANAGE)
+	$(PYTHON) $(MANAGE) runserver
+
+
 env: $(ENV_PATH)
 
 
