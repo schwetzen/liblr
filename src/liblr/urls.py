@@ -16,6 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from app.views import *
+
 urlpatterns = [
+    # Admin urls
     path('admin/', admin.site.urls),
+
+    # App urls
+    path('', IndexView.as_view(), name='index'),
 ]
