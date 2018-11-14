@@ -7,6 +7,7 @@ ENV_PATH    = ./$(SRC_DIR)/liblr/env.py
 
 all: check
 
+
 .PHONY: check
 .SILENT: check
 check: $(PYTHON) $(MANAGE)
@@ -34,6 +35,12 @@ migrate: $(PYTHON) $(MANAGE)
 .SILENT: run
 run: $(PYTHON) $(MANAGE)
 	$(PYTHON) $(MANAGE) runserver
+
+
+.PHONY: shell
+.SILENT: shell
+shell: $(PYTHON) $(MANAGE)
+	$(PYTHON) $(MANAGE) shell
 
 
 env: $(ENV_PATH)
