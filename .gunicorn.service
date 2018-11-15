@@ -1,0 +1,17 @@
+[Unit]
+Description=gunicorn daemon
+Requires=gunicorn.socket
+After=network.target
+
+[Service]
+User=schwetzen
+Group=www-data
+WorkingDirectory=/home/schwetzen/liblr/src
+ExecStart=/home/schwetzen/liblr/venv/bin/gunicorn \
+          --access-logfile - \
+          --workers 3 \
+          --bind unix:/run/gunicorn.sock \
+          liblr.wsgi:application
+
+[Install]
+WantedBy=multi-user.target
