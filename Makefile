@@ -1,8 +1,12 @@
-SRC_DIR     = src
-VENV        = venv
-PYTHON      = $(VENV)/bin/python
-MANAGE      = $(SRC_DIR)/manage.py
-ENV_PATH    = ./$(SRC_DIR)/liblr/env.py
+SRC_DIR        = src
+VENV           = venv
+PYTHON         = $(VENV)/bin/python
+MANAGE         = $(SRC_DIR)/manage.py
+ENV_PATH       = ./$(SRC_DIR)/liblr/env.py
+LAUNCHER_PATH  = /etc/systemd/system
+NGINX_PATH     = /etc/nginx
+DOMAIN         = schwetzen.com
+WHOAMI        := $(shell whoami)
 
 
 all: check
@@ -62,6 +66,65 @@ else
 	echo "    'NAME': os.path.join(_BASE_DIR, 'db.sqlite3')," >> $(ENV_PATH)
 	echo "}" >> $(ENV_PATH)
 	$(call colorize,2,"Done")
+endif
+
+
+# Production declarations
+
+.PHONY: setup status logs
+.SILENT: setup status logs
+setup:
+ifneq ($(WHOAMI),schwetzen)
+	$(call colorize,1,"Current environment incorrect.")
+else
+	$(call colorize,4,"Copying launcher files...")
+	sudo cp .gunicorn.socket $(LAUNCHER_PATH)/gunicorn.socket
+	sudo cp .gunicorn.service $(LAUNCHER_PATH)/gunicorn.service
+
+	$(call colorize,4,"Setting up socket...")
+	sudo systemctl start gunicorn.socket
+    sudo systemctl enable gunicorn.socket
+
+	$(call colorize,4,"Copying nginx configuration...")
+	sudo cp .nginx $(NGINX_PATH)/sites-available/liblr
+	sudo ln -s $(NGINX_PATH)/sites-available/liblr $(NGINX_PATH)/sites-enabled
+	sudo systemctl reload nginx
+
+	$(call colorize,4,"Setting up certbot...")
+	sudo certbot --nginx -d $(DOMAIN) -d www.$(DOMAIN)
+
+	$(call colorize,4,"Setting up monthly auto-renew...")
+	sudo touch /etc/cron.monthly/cert.sh
+	sudo chmod +x /etc/cron.monthly/cert.sh
+	echo "sudo certbot renew" | sudo tee /etc/cron.monthly/cert.sh
+endif
+
+
+status:
+ifneq ($(WHOAMI),schwetzen)
+	$(call colorize,1,"Current environment incorrect.")
+else
+	$(call colorize,4,"Checking gunicorn socket...")
+	sudo systemctl status gunicorn.socket
+	file /run/gunicorn.sock
+
+	$(call colorize,4,"Checking gunicorn status...")
+	sudo systemctl status gunicorn
+
+	$(call colorize,4,"Checking nginx status...")
+	sudo systemctl status nginx
+
+	$(call colorize,4,"Checking PostgreSQL status...")
+	sudo systemctl status postgresql
+endif
+
+
+logs:
+ifneq ($(WHOAMI),schwetzen)
+	$(call colorize,1,"Current environment incorrect.")
+else
+	$(call colorize,4,"Printing gunicorn logs...")
+	sudo journalctl -u gunicorn.socket
 endif
 
 
