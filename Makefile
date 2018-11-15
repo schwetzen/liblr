@@ -83,7 +83,7 @@ else
 
 	$(call colorize,4,"Setting up socket...")
 	sudo systemctl start gunicorn.socket
-    sudo systemctl enable gunicorn.socket
+	sudo systemctl enable gunicorn.socket
 
 	$(call colorize,4,"Copying nginx configuration...")
 	sudo cp .nginx $(NGINX_PATH)/sites-available/liblr
