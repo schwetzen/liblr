@@ -35,15 +35,19 @@ migrate: $(PYTHON) $(MANAGE)
 	$(PYTHON) $(MANAGE) migrate
 
 
+.PHONY: static
+.SILENT: static
+static: $(PYTHON) $(MANAGE)
+	$(call colorize,1,"Collecting static files")
+	$(PYTHON) $(MANAGE) collectstatic --no-input
+
+
 .PHONY: run
 .SILENT: run
-run: $(PYTHON) $(MANAGE)
+run: static $(PYTHON) $(MANAGE)
 ifneq ($(WHOAMI),schwetzen)
 	$(PYTHON) $(MANAGE) runserver
 else
-	$(call colorize,4,"Collecting static files...")
-	$(PYTHON) $(MANAGE) collectstatic
-
 	$(call colorize,4,"Restarting gunicorn...")
 	sudo systemctl restart gunicorn
 endif
