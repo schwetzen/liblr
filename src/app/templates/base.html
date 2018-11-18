@@ -11,9 +11,39 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link rel="stylesheet" href="{% static 'liblr/css/styles.css' %}" type="text/css">
 
-        <title>{{ title }}</title>
+        <title>{% block title %}Home{% endblock %}</title>
     </head>
     <body>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="{% url 'index' %}">liblr</a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item {% block index %}{% endblock %}">
+                        <a class="nav-link" href="{% url 'index' %}">Home</a>
+                    </li>
+                </ul>
+
+                {% if user.is_authenticated %}
+                <form class="form-inline my-2 my-lg-0" action="{% url 'logout' %}" method="POST">
+                    {% csrf_token %}
+                    <button class="btn btn-danger my-2 my-sm-0" type="submit">Logout</button>
+                    <input type="hidden" name="next" value="{{ next }}">
+                </form>
+                {% else %}
+                <div class="form-row my-2 my-lg-0">
+                    <div class="col">
+                        <a class="btn btn-primary my-2 my-sm-0" href="{% url 'login' %}">Login</a>
+                        {#<a class="btn btn-primary my-2 my-sm-0" href="{% url 'register' %}">Register</a>#}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </nav>
         <div class="container">
             {% block content %}
             {% endblock %}
