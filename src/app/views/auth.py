@@ -1,6 +1,9 @@
+from django.views import generic
 from django.contrib.auth import views
 from django.shortcuts import redirect
+from django.urls import reverse_lazy
 from django.http import HttpResponseForbidden
+from app.forms import RegisterForm
 
 
 class LoginView(views.LoginView):
@@ -19,3 +22,9 @@ class LoginView(views.LoginView):
 
 class LogoutView(views.LogoutView):
     ...
+
+
+class RegisterView(generic.CreateView):
+    template_name = 'register.html'
+    form_class = RegisterForm
+    success_url = reverse_lazy('login')
