@@ -1,0 +1,21 @@
+% extends 'base.html' %}
+
+{% block title %}Tips{% endblock %}
+{% block index %}active{% endblock %}
+
+{% block content %}
+<h1>Reading tips</h1>
+
+<ul>
+	{% for tip in object_list %}
+	<li>
+		<b>Title:</b> {{ tip.title }}<br>
+		<b>URL:</b> <a href="{{ tip.url }}">{{ tip.url }}</a> <br>
+		<b>Description:</b> {{ tip.description }}
+	</li>
+	{% endfor %}
+
+</ul>
+
+
+{% endblock %}

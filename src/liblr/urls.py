@@ -24,6 +24,7 @@ urlpatterns = [
 
     # App urls
     path('', IndexView.as_view(), name='index'),
+    path('tips', TipsView.as_view(), name='tips'),
 
     # Authentication
     path('login', LoginView.as_view(), name='login'),

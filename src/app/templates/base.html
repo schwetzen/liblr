@@ -26,6 +26,10 @@
                     <li class="nav-item {% block index %}{% endblock %}">
                         <a class="nav-link" href="{% url 'index' %}">Home</a>
                     </li>
+					<li class="nav-item {% block tips %}{% endblock %}">
+						<a class="nav-link" href="#">Reading Tips</a>
+					</li>
+		
                 </ul>
 
                 {% if user.is_authenticated %}
