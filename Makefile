@@ -1,12 +1,16 @@
 SRC_DIR        = src
 VENV           = venv
+DRIVER_DIR    := $(PWD)/drivers
 PYTHON         = $(VENV)/bin/python
+GECKODRIVER    = $(DRIVER_DIR)/geckodriver
 MANAGE         = $(SRC_DIR)/manage.py
 ENV_PATH       = ./$(SRC_DIR)/liblr/env.py
 LAUNCHER_PATH  = /etc/systemd/system
 NGINX_PATH     = /etc/nginx
 DOMAIN         = schwetzen.com
 WHOAMI        := $(shell whoami)
+UNAME         := $(shell uname)
+PATH          := $(shell echo $$PATH)
 
 
 all: check
@@ -42,13 +46,50 @@ static: $(PYTHON) $(MANAGE)
 	$(PYTHON) $(MANAGE) collectstatic --no-input
 
 
+.PHONY: clean
+.SILENT: clean
+clean:
+	$(call colorize,1,"Deleting compiled files...")
+	find . -type f -name '*.py[co]' -delete -o -type d -name __pycache__ -delete
+
+	$(call colorize,1,"Deleting symlink to geckodriver...")
+	rm -f $(GECKODRIVER)
+
+
+.SILENT: $(GECKODRIVER)
+$(GECKODRIVER):
+	$(call colorize,3,"Setting up test driver...")
+ifeq ($(UNAME),Darwin)
+	ln -s $(GECKODRIVER)-macos $(GECKODRIVER)
+	$(call colorize,2,"Set up symlink to driver for macOS")
+else
+ifeq ($(UNAME),Linux)
+	ln -s $(GECKODRIVER)-linux64 $(GECKODRIVER)
+	$(call colorize,2,"Set up symlink to driver for Linux")
+else
+	$(error "Unknown platform: $(UNAME)")
+endif
+endif
+
+
+.PHONY: test
+.SILENT: test
+test: $(GECKODRIVER) $(PYTHON) $(MANAGE)
+ifneq ($(WHOAMI),schwetzen)
+	$(call colorize,3,"Running tests...")
+	PATH="$(DRIVER_DIR):$(PATH)" $(PYTHON) $(MANAGE) test app
+else
+	$(call colorize,1,"Not running tests here.")
+endif
+
+
 .PHONY: run
 .SILENT: run
 run: static $(PYTHON) $(MANAGE)
 ifneq ($(WHOAMI),schwetzen)
 	$(PYTHON) $(MANAGE) runserver
 else
-	$(call colorize,4,"Restarting gunicorn...")
+	$(call colorize,3,"Restarting gunicorn...")
 	sudo systemctl restart gunicorn
 endif
 
@@ -68,7 +109,7 @@ $(ENV_PATH):
 ifneq (,$(wildcard $(ENV_PATH)))
 	$(call colorize,1,"Local env already exists at: $(ENV_PATH)")
 else
-	$(call colorize,1,"Creating default local env at: $(ENV_PATH)")
+	$(call colorize,3,"Creating default local env at: $(ENV_PATH)")
 	touch $(ENV_PATH)
 	echo "import os" >> $(ENV_PATH)
 	echo "_BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))" >> $(ENV_PATH)
@@ -89,23 +130,23 @@ setup:
 ifneq ($(WHOAMI),schwetzen)
 	$(call colorize,1,"Current environment incorrect.")
 else
-	$(call colorize,4,"Copying launcher files...")
+	$(call colorize,3,"Copying launcher files...")
 	sudo cp .gunicorn.socket $(LAUNCHER_PATH)/gunicorn.socket
 	sudo cp .gunicorn.service $(LAUNCHER_PATH)/gunicorn.service
 
-	$(call colorize,4,"Setting up socket...")
+	$(call colorize,3,"Setting up socket...")
 	sudo systemctl start gunicorn.socket
 	sudo systemctl enable gunicorn.socket
 
-	$(call colorize,4,"Copying nginx configuration...")
+	$(call colorize,3,"Copying nginx configuration...")
 	sudo cp .nginx $(NGINX_PATH)/sites-available/liblr
 	sudo ln -s $(NGINX_PATH)/sites-available/liblr $(NGINX_PATH)/sites-enabled
 	sudo systemctl reload nginx
 
-	$(call colorize,4,"Setting up certbot...")
+	$(call colorize,3,"Setting up certbot...")
 	sudo certbot --nginx -d $(DOMAIN) -d www.$(DOMAIN)
 
-	$(call colorize,4,"Setting up monthly auto-renew...")
+	$(call colorize,3,"Setting up monthly auto-renew...")
 	sudo touch /etc/cron.monthly/cert.sh
 	sudo chmod +x /etc/cron.monthly/cert.sh
 	echo "sudo certbot renew" | sudo tee /etc/cron.monthly/cert.sh
@@ -116,17 +157,17 @@ status:
 ifneq ($(WHOAMI),schwetzen)
 	$(call colorize,1,"Current environment incorrect.")
 else
-	$(call colorize,4,"Checking gunicorn socket...")
+	$(call colorize,3,"Checking gunicorn socket...")
 	sudo systemctl status gunicorn.socket
 	file /run/gunicorn.sock
 
-	$(call colorize,4,"Checking gunicorn status...")
+	$(call colorize,3,"Checking gunicorn status...")
 	sudo systemctl status gunicorn
 
-	$(call colorize,4,"Checking nginx status...")
+	$(call colorize,3,"Checking nginx status...")
 	sudo systemctl status nginx
 
-	$(call colorize,4,"Checking PostgreSQL status...")
+	$(call colorize,3,"Checking PostgreSQL status...")
 	sudo systemctl status postgresql
 endif
 
@@ -135,7 +176,7 @@ logs:
 ifneq ($(WHOAMI),schwetzen)
 	$(call colorize,1,"Current environment incorrect.")
 else
-	$(call colorize,4,"Printing gunicorn logs...")
+	$(call colorize,3,"Printing gunicorn logs...")
 	sudo journalctl -u gunicorn.socket
 endif
 
