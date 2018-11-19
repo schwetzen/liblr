@@ -8,7 +8,9 @@ export PATH
 # linux64/linux32/macos
 platform=linux64
 echo "Creating geckodriver symlink..."
-rm drivers/geckodriver
-ln -s drivers/geckodriver-${platform} drivers/geckodriver
+cd drivers
+rm geckodriver
+ln -s geckodriver-${platform} geckodriver
+cd ..
 
 echo "Done."
