@@ -1,8 +1,8 @@
-from django.forms import ModelForm
+from django import forms
 from app.models import ReadingTip
 
 
-class ReadingTipCreateForm(ModelForm):
+class ReadingTipCreateForm(forms.ModelForm):
     class Meta:
         model = ReadingTip
-        fields = ['title', 'url', 'description']
+        fields = ('title', 'url', 'description',)

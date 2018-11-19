@@ -6,8 +6,10 @@
 
 <form method="post" action="{% url 'register' %}">
     {% csrf_token %}
-    {{ form.as_table }}
-    <input type="submit" value="register">
+    <table>
+        {{ form.as_table }}
+    </table>
+    <button class="btn btn-primary" type="submit">Register</button>
 </form>
 
 {% endblock %}

@@ -24,11 +24,11 @@ urlpatterns = [
 
     # App urls
     path('', IndexView.as_view(), name='index'),
-    path('tips', TipsView.as_view(), name='tips'),
-    path('tip/create/', ReadingTipCreate.as_view(), name='tip-create'),
+    path('tips/', ReadingTipListView.as_view(), name='tips'),
+    path('tips/create/', ReadingTipCreateView.as_view(), name='tips_create'),
 
     # Authentication
     path('login/', LoginView.as_view(), name='login'),
-    path('logout', LogoutView.as_view(), name='logout'),
-    path('register', RegisterView.as_view(), name='register'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('register/', RegisterView.as_view(), name='register'),
 ]
