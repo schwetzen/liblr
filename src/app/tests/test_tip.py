@@ -27,11 +27,22 @@ class ReadingTipTestCase(django.test.SimpleTestCase):
         except ValidationError:
             self.fail('ReadingTip.clean_fields() raised a ValidationError unexpectedly!')
 
+    def test_title_blank(self):
+        tip = self._create_instance(title='')
+        self.assertRaises(ValidationError, tip.clean_fields)
+
     def test_title_too_long(self):
         limit = 31
         long_title = 'a' * limit
         tip = self._create_instance(title=long_title)
         self.assertRaises(ValidationError, tip.clean_fields)
+
+    def test_url_blank(self):
+        tip = self._create_instance(url='')
+        try:
+            tip.clean_fields()
+        except ValidationError:
+            self.fail('ReadingTip.clean_fields() raised a ValidationError unexpectedly!')
 
     def test_url_too_long(self):
         limit = 21
@@ -39,8 +50,9 @@ class ReadingTipTestCase(django.test.SimpleTestCase):
         tip = self._create_instance(url=long_url)
         self.assertRaises(ValidationError, tip.clean_fields)
 
-    def test_desc_too_long(self):
-        limit = 51
-        long_desc = 'a' * limit
-        tip = self._create_instance(desc=long_desc)
-        self.assertRaises(ValidationError, tip.clean_fields)
+    def test_desc_blank(self):
+        tip = self._create_instance(desc='')
+        try:
+            tip.clean_fields()
+        except ValidationError:
+            self.fail('ReadingTip.clean_fields() raised a ValidationError unexpectedly!')
