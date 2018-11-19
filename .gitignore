@@ -49,4 +49,4 @@ MANIFEST
 
 # Splinter-related
 geckodriver.log
-drivers/geckodriver
+.drivers/geckodriver

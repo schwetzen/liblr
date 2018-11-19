@@ -1,6 +1,6 @@
 SRC_DIR        = src
 VENV           = venv
-DRIVER_DIR    := $(PWD)/drivers
+DRIVER_DIR    := $(PWD)/.drivers
 PYTHON         = $(VENV)/bin/python
 GECKODRIVER    = $(DRIVER_DIR)/geckodriver
 MANAGE         = $(SRC_DIR)/manage.py
