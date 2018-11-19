@@ -1,31 +1,28 @@
-import django.test
+from django.test import TestCase
 from django.core.exceptions import ValidationError
-from app.models.tip import ReadingTip
+from app.models import ReadingTip
 
 
-class ReadingTipTestCase(django.test.SimpleTestCase):
+TITLE = 'Test title'
+URL = 'https://google.com'
+DESCRIPTION = 'Lorem ipsum dolor sit amet.'
 
-    def _initialize(self):
-        self.test_title = 'Test title'
-        self.test_url = 'google.com'
-        self.test_desc = 'Testing'
 
-    def _create_instance(self, title=None, url=None, desc=None):
-        self._initialize()
-        if title is None:
-            title = self.test_title
-        if url is None:
-            url = self.test_url
-        if desc is None:
-            desc = self.test_desc
-        return ReadingTip(title=title, url=url, description=desc)
+class ReadingTipTestCase(TestCase):
+
+    def _create_instance(self, title=None, url=None, description=None):
+        return ReadingTip(
+            title=title if title is not None else TITLE,
+            url=url if url is not None else URL,
+            description=description if description is not None else DESCRIPTION
+        )
 
     def test_arguments_normal(self):
         tip = self._create_instance()
         try:
             tip.clean_fields()
         except ValidationError:
-            self.fail('ReadingTip.clean_fields() raised a ValidationError unexpectedly!')
+            self.fail('ReadingTip.clean_fields() raised a ValidationError.')
 
     def test_title_blank(self):
         tip = self._create_instance(title='')
@@ -42,7 +39,7 @@ class ReadingTipTestCase(django.test.SimpleTestCase):
         try:
             tip.clean_fields()
         except ValidationError:
-            self.fail('ReadingTip.clean_fields() raised a ValidationError unexpectedly!')
+            self.fail('ReadingTip.clean_fields() raised a ValidationError.')
 
     def test_url_too_long(self):
         limit = 21
@@ -51,8 +48,8 @@ class ReadingTipTestCase(django.test.SimpleTestCase):
         self.assertRaises(ValidationError, tip.clean_fields)
 
     def test_desc_blank(self):
-        tip = self._create_instance(desc='')
+        tip = self._create_instance(description='')
         try:
             tip.clean_fields()
         except ValidationError:
-            self.fail('ReadingTip.clean_fields() raised a ValidationError unexpectedly!')
+            self.fail('ReadingTip.clean_fields() raised a ValidationError.')
