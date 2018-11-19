@@ -4,16 +4,16 @@
 {% block index %}active{% endblock %}
 
 {% block content %}
-<h1>Reading tips</h1><br>
+<h1>Reading tips</h1>
 <a href="/tip/create/" style="btn btn-secondary">Add a reading tip</a>
 
 <ul>
 	{% for tip in object_list %}
-	<li>
+	<br><li>
 		<b>Title:</b> {{ tip.title }}<br>
 		<b>URL:</b> <a href="{{ tip.url }}">{{ tip.url }}</a> <br>
 		<b>Description:</b> {{ tip.description }}
-	</li>
+	</li>	
 	{% endfor %}
 
 </ul>
