@@ -1,10 +1,10 @@
-SRC_DIR        = src
-VENV           = venv
+SRC_DIR        = $(PWD)/src
+VENV           = $(PWD)/venv
 DRIVER_DIR    := $(PWD)/.drivers
 PYTHON         = $(VENV)/bin/python
 GECKODRIVER    = $(DRIVER_DIR)/geckodriver
 MANAGE         = $(SRC_DIR)/manage.py
-ENV_PATH       = ./$(SRC_DIR)/liblr/env.py
+ENV_PATH       = $(SRC_DIR)/liblr/env.py
 LAUNCHER_PATH  = /etc/systemd/system
 NGINX_PATH     = /etc/nginx
 DOMAIN         = schwetzen.com
