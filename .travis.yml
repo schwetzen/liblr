@@ -6,7 +6,8 @@ python:
 install:
   - pip install -r requirements.txt
   - make env
-script: python src/manage.py test app
+  - ln -s .drivers/geckodriver-linux64 .drivers/geckodriver
+script: PATH="$(pwd)/drivers:$PATH" python src/manage.py test app
 branches:
   only:
     - master
