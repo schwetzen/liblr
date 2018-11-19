@@ -12,4 +12,4 @@ class ReadingTipCreate(generic.CreateView):
         if form.is_valid():
             form.save()
 
-        return redirect('index')
+        return redirect('tips')

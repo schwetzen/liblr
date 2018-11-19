@@ -1,8 +1,9 @@
 from django.views.generic.list import ListView
-from django.http import HttpResponseForbidden
+from app.models.tip import ReadingTip
 
 class TipsView(ListView):
     template_name="tips.html"
-    
-    def get_queryset():
-        return super(Tipsview, self).get_queryset()
+
+    def get_queryset(self):
+        return ReadingTip.objects.all()
+
