@@ -46,3 +46,7 @@ wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+# Splinter-related
+geckodriver.log
+drivers/geckodriver
