@@ -26,10 +26,11 @@
                     <li class="nav-item {% block index %}{% endblock %}">
                         <a class="nav-link" href="{% url 'index' %}">Home</a>
                     </li>
+                    {% if user.is_authenticated %}
 					<li class="nav-item {% block tips %}{% endblock %}">
 						<a class="nav-link" href="{% url 'tips' %}">Reading Tips</a>
 					</li>
-		
+                    {% endif %}
                 </ul>
 
                 {% if user.is_authenticated %}
