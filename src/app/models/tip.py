@@ -32,12 +32,6 @@ class ReadingTip(models.Model):
             except ReadingTipContentWebsite.DoesNotExist:
                 return None
 
-    def url(self):
-        try:
-            return self.websites.latest().url
-        except ReadingTipContentWebsite.DoesNotExist:
-            return None
-
 
 class ReadingTipContentWebsite(models.Model):
     class Meta:
