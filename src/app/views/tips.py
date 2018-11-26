@@ -10,6 +10,13 @@ class ReadingTipListView(mixins.LoginRequiredMixin, generic.ListView):
     login_url = reverse_lazy('login')
     template_name = 'reading_tip_list.html'
 
+    def post(self, request, tip_id):
+        tip = ReadingTip.objects.get(id=tip_id)
+        tip.has_been_read = 'mark_as_read' in request.POST
+        tip.save()
+
+        return redirect('tips')
+
     def get_queryset(self):
         return ReadingTip.objects.filter(user=self.request.user).order_by('-id')
 
