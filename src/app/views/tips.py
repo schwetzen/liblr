@@ -8,7 +8,7 @@ from app.forms import ReadingTipCreateForm
 
 class ReadingTipListView(mixins.LoginRequiredMixin, generic.ListView):
     login_url = reverse_lazy('login')
-    template_name="reading_tip_list.html"
+    template_name = 'reading_tip_list.html'
 
     def get_queryset(self):
         return ReadingTip.objects.filter(user=self.request.user).order_by('-id')

@@ -16,8 +16,8 @@ class ReadingTip(models.Model):
         related_name='reading_tips'
     )
     content_type = models.IntegerField(choices=CONTENT_TYPE)
-    title = models.CharField(verbose_name="Title", max_length=30)
-    description = models.TextField(verbose_name="Description", blank=True)
+    title = models.CharField(verbose_name='Title', max_length=30)
+    description = models.TextField(verbose_name='Description', blank=True)
 
     def content(self):
         if self.content_type == ReadingTip.BOOK:
@@ -40,7 +40,7 @@ class ReadingTipContentWebsite(models.Model):
     tip = models.ForeignKey(
         'ReadingTip',
         on_delete=models.CASCADE,
-        related_name="websites"
+        related_name='websites'
     )
     url = models.URLField()
 
@@ -52,6 +52,6 @@ class ReadingTipContentBook(models.Model):
     tip = models.ForeignKey(
         'ReadingTip',
         on_delete=models.CASCADE,
-        related_name="books"
+        related_name='books'
     )
     isbn = models.CharField(max_length=50)
