@@ -14,7 +14,7 @@ class ReadingTipCreateForm(forms.ModelForm):
         required=False,
     )
 
-    url = forms.CharField(
+    url = forms.URLField(
         label='URL',
         max_length=255,
         required=False,
