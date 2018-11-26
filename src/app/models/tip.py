@@ -18,6 +18,7 @@ class ReadingTip(models.Model):
     content_type = models.IntegerField(choices=CONTENT_TYPE)
     title = models.CharField(verbose_name="Title", max_length=30)
     description = models.TextField(verbose_name="Description", blank=True)
+    is_deleted = models.BooleanField(default=False)
 
     def content(self):
         if self.content_type == ReadingTip.BOOK:

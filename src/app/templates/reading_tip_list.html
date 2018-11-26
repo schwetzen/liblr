@@ -9,12 +9,14 @@
 
 <ul>
 	{% for tip in object_list %}
+	{% if not tip.is_deleted %}
 	<br><li>
 		<b>Title:</b> {{ tip.title }}<br>
 		<b>URL:</b> <a href="{{ tip.url }}">{{ tip.url }}</a> <br>
 		<b>Description:</b> <span>{{ tip.description }}</span> <br>
 		<a href="{% url 'tips_delete' pk=tip.id %}" class="btn btn-danger">Delete</a>
-	</li>	
+	</li>
+	{% endif %}
 	{% endfor %}
 </ul>
 
