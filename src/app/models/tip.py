@@ -21,6 +21,10 @@ class ReadingTip(models.Model):
     has_been_read = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
 
+    def readable_type(self):
+        _, value = ReadingTip.CONTENT_TYPE[self.content_type]
+        return value
+
     def content(self):
         if self.content_type == ReadingTip.BOOK:
             try:
@@ -35,18 +39,6 @@ class ReadingTip(models.Model):
                 return None
 
 
-class ReadingTipContentWebsite(models.Model):
-    class Meta:
-        get_latest_by = ('-id',)
-
-    tip = models.ForeignKey(
-        'ReadingTip',
-        on_delete=models.CASCADE,
-        related_name='websites'
-    )
-    url = models.URLField()
-
-
 class ReadingTipContentBook(models.Model):
     class Meta:
         get_latest_by = ('-id',)
@@ -57,3 +49,15 @@ class ReadingTipContentBook(models.Model):
         related_name='books'
     )
     isbn = models.CharField(max_length=50)
+
+
+class ReadingTipContentWebsite(models.Model):
+    class Meta:
+        get_latest_by = ('-id',)
+
+    tip = models.ForeignKey(
+        'ReadingTip',
+        on_delete=models.CASCADE,
+        related_name='websites'
+    )
+    url = models.URLField()
