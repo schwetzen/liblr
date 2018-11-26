@@ -41,6 +41,13 @@ class ReadingTipCreateView(mixins.LoginRequiredMixin, generic.CreateView):
 class ReadingTipDeleteView(DeleteView):
 	model = ReadingTip
 	success_url = reverse_lazy('tips')
+
+        def delete():
+            # Do Something
+
+            return reverse_lazy('tips')
+
+
 	
 	# Making all GET requests into POST requests to 
 	# avoid having the confirmation page

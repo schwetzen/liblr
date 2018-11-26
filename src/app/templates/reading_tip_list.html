@@ -9,6 +9,7 @@
 
 <ul>
   {% for tip in object_list %}
+  {% if not tip.is_deleted %}
   <li>
     <b>Title:</b> {{ tip.title }}<br>
     {% if tip.url %}<b>URL:</b> <a href="{{ tip.url }}">{{ tip.url }}</a> <br>{% endif %}
@@ -30,6 +31,7 @@
     </form>
         <a href="{% url 'tips_delete' pk=tip.id %}" class="btn btn-danger">Delete</a>
   </li>
+  {% endif %}
   {% endfor %}
 </ul>
 
