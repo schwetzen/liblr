@@ -42,20 +42,14 @@ class ReadingTipDeleteView(DeleteView):
     model = ReadingTip
     success_url = reverse_lazy('tips')
 
-    def delete():
-        tip_id = kwargs['pk']
-        tip_to_del = ReadingTip.objects.get(id=tip_id)
+    def delete(self, request, pk):
+        tip = ReadingTip.objects.get(id=pk)
         tip.is_deleted = True
         tip.save()
-        return reverse_lazy('tips')
+        return redirect('tips')
 
-
-	
-	# Making all GET requests into POST requests to 
-	# avoid having the confirmation page
-    def get(self, request, *args, **kwargs):
-        return self.post(request, *args, **kwargs)
-
+    def get(self, *args, **kwargs):
+        return self.post(*args, **kwargs)
 
 
 
