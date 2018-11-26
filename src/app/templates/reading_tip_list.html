@@ -11,11 +11,11 @@
 	{% for tip in object_list %}
 	<br><li>
 		<b>Title:</b> {{ tip.title }}<br>
-		<b>URL:</b> <a href="{{ tip.url }}">{{ tip.url }}</a> <br>
+		{% if tip.url %}<b>URL:</b> <a href="{{ tip.url }}">{{ tip.url }}</a> <br>{% endif %}
+		{% if tip.isbn %}<b>ISBN:</b> {{ tip.isbn }} <br>{% endif %}
 		<b>Description:</b> {{ tip.description }}
-	</li>	
+	</li>
 	{% endfor %}
 </ul>
-
 
 {% endblock %}
