@@ -25,6 +25,7 @@ urlpatterns = [
     # App urls
     path('', IndexView.as_view(), name='index'),
     path('tips/', ReadingTipListView.as_view(), name='tips'),
+    path('tips/<int:tip_id>/', ReadingTipView.as_view(), name='tip'),
     path('tips/create/', ReadingTipCreateView.as_view(), name='tips_create'),
 
     # Authentication

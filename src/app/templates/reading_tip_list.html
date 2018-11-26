@@ -5,17 +5,83 @@
 
 {% block content %}
 <h1>Reading tips</h1>
-<a href="{% url 'tips_create' %}" class="btn btn-secondary">Add a reading tip</a>
+<a href="{% url 'tips_create' %}" class="btn btn-secondary mb-4">Add a reading tip</a>
 
-<ul>
-	{% for tip in object_list %}
-	<br><li>
-		<b>Title:</b> {{ tip.title }}<br>
-		<b>URL:</b> <a href="{{ tip.url }}">{{ tip.url }}</a> <br>
-		<b>Description:</b> {{ tip.description }}
-	</li>	
-	{% endfor %}
-</ul>
+{% if not object_list %}
+<div class="alert alert-secondary" role="alert">
+  You don't have any reading tips.
+</div>
+{% endif %}
 
+{% for tip in object_list %}
+{% if tip.has_been_read %}
+<div class="card border-success mb-4">
+  <div class="card-header border-success">{{ tip.readable_type }} <span class="text-muted">(Read)</span></div>
+{% else %}
+<div class="card mb-4">
+  <div class="card-header">{{ tip.readable_type }}</div>
+{% endif %}
+
+  <div class="card-body">
+    <p class="h5 card-title">{{ tip.title }}</p>
+    <p class="card-text">{{ tip.description }}</p>
+
+    {% if tip.content_type == 0 %}
+    <p class="card-text"><b>ISBN:</b> {{ tip.content.isbn }}</p>
+
+    {% elif tip.content_type == 1 %}
+    <p class="card-text"><b>URL:</b> <a href="{{ tip.content.url }}">{{ tip.content.url }}</a></p>
+    {% endif %}
+
+    <div class="row">
+      <div class="col col-12 col-md-6 col-lg-6">
+        <a class="btn btn-block btn-primary" href="{% url 'tip' tip_id=tip.id %}">View</a>
+      </div>
+      <div class="col col-12 col-md-6 col-lg-6">
+        <form class="form" method="PATCH" action="{% url 'tip' tip_id=tip.id %}">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{% url 'tips' %}">
+          {% if tip.has_been_read %}
+          <input type="hidden" name="has_been_read" value="">
+          <button class="btn btn-block btn-warning" type="submit">Mark as unread</button>
+          {% else %}
+          <input type="hidden" name="has_been_read" value="1">
+          <button class="btn btn-block btn-secondary" type="submit">Mark as read</button>
+          {% endif %}
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+
+<!-- <ul>
+  {% for tip in object_list %}
+  {% if not tip.is_deleted %}
+  <li>
+    <b>Title:</b> {{ tip.title }}<br>
+    {% if tip.url %}<b>URL:</b> <a href="{{ tip.url }}">{{ tip.url }}</a> <br>{% endif %}
+    {% if tip.isbn %}<b>ISBN:</b> {{ tip.isbn }} <br>{% endif %}
+    <b>Description:</b> {{ tip.description }}
+    <form method="post" action="{% url 'tip' tip_id=tip.id %}">
+      {% csrf_token %}
+      <div class="custom-control custom-checkbox">
+        {% if tip.has_been_read %}
+          <input name="mark_as_read" type="checkbox" class="custom-control-input" id="markasread_checked_{{ forloop.counter0 }}"
+              onchange="this.form.submit()" checked>
+          <label class="custom-control-label" for="markasread_checked_{{ forloop.counter0 }}">Mark as read</label>
+        {% else %}
+          <input name="mark_as_read" type="checkbox" class="custom-control-input" id="markasread_unchecked_{{ forloop.counter0 }}"
+              onchange="this.form.submit()">
+          <label class="custom-control-label" for="markasread_unchecked_{{ forloop.counter0 }}">Mark as read</label>
+        {% endif %}
+      </div>
+    </form>
+        <a href="{% url 'tip' tip_id=tip.id %}" class="btn btn-danger">Delete</a>
+  </li>
+  {% endif %}
+  {% endfor %}
+</ul> -->
 
 {% endblock %}

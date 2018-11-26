@@ -1,7 +1,9 @@
 SRC_DIR        = $(PWD)/src
 VENV           = $(PWD)/venv
-DRIVER_DIR    := $(PWD)/.drivers
+DRIVER_DIR     = $(PWD)/.drivers
 PYTHON         = $(VENV)/bin/python
+PIP            = $(VENV)/bin/pip
+REQUIREMENTS   = requirements.txt
 GECKODRIVER    = $(DRIVER_DIR)/geckodriver
 MANAGE         = $(SRC_DIR)/manage.py
 ENV_PATH       = $(SRC_DIR)/liblr/env.py
@@ -81,6 +83,19 @@ ifneq ($(WHOAMI),schwetzen)
 else
 	$(call colorize,1,"Not running tests here.")
 endif
+
+
+.PHONY: requirements
+.SILENT: requirements
+requirements: $(PIP)
+	$(call colorize,3,"Updating requirements...")
+	$(PIP) install -r $(REQUIREMENTS) --quiet
+	$(call colorize,2,"Done")
+
+
+.PHONY: update
+.SILENT: update
+update: requirements migrate
 
 
 .PHONY: run
