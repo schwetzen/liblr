@@ -12,8 +12,8 @@
 	<br><li>
 		<b>Title:</b> {{ tip.title }}<br>
 		<b>URL:</b> <a href="{{ tip.url }}">{{ tip.url }}</a> <br>
-		<b>Description:</b> {{ tip.description }}
-		<a href="{% url 'tips_delete' pk=tip.id %}" style='btn btn-danger'>Delete</a><br>
+		<b>Description:</b> <span>{{ tip.description }}</span> <br>
+		<a href="{% url 'tips_delete' pk=tip.id %}" class="btn btn-danger">Delete</a>
 	</li>	
 	{% endfor %}
 </ul>
