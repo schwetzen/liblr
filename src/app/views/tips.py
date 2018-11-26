@@ -1,4 +1,5 @@
 from django.views import generic
+from django.views.generic.edit import DeleteView
 from django.contrib.auth import mixins
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
@@ -28,3 +29,19 @@ class ReadingTipCreateView(mixins.LoginRequiredMixin, generic.CreateView):
         ReadingTip.objects.create(user=self.request.user, **form.cleaned_data)
 
         return redirect('tips')
+
+
+class ReadingTipDeleteView(DeleteView):
+	model = ReadingTip
+	success_url = reverse_lazy('tips')
+	
+	# Making all GET requests into POST requests to 
+	# avoid having the confirmation page
+	def get(self, request, *args, **kwargs):
+		return self.post(request, *args, **kwargs)
+
+
+
+
+
+
