@@ -8,15 +8,29 @@
 <a href="{% url 'tips_create' %}" class="btn btn-secondary">Add a reading tip</a>
 
 <ul>
-	{% for tip in object_list %}
-	<br><li>
-		<b>Title:</b> {{ tip.title }}<br>
-		<b>URL:</b> <a href="{{ tip.url }}">{{ tip.url }}</a> <br>
-		<b>Description:</b> <span>{{ tip.description }}</span> <br>
-		<a href="{% url 'tips_delete' pk=tip.id %}" class="btn btn-danger">Delete</a>
-	</li>	
-	{% endfor %}
+  {% for tip in object_list %}
+  <li>
+    <b>Title:</b> {{ tip.title }}<br>
+    {% if tip.url %}<b>URL:</b> <a href="{{ tip.url }}">{{ tip.url }}</a> <br>{% endif %}
+    {% if tip.isbn %}<b>ISBN:</b> {{ tip.isbn }} <br>{% endif %}
+    <b>Description:</b> {{ tip.description }}
+    <form method="post" action="{% url 'tips_detail' tip.id %}">
+      {% csrf_token %}
+      <div class="custom-control custom-checkbox">
+        {% if tip.has_been_read %}
+          <input name="mark_as_read" type="checkbox" class="custom-control-input" id="markasread_checked_{{ forloop.counter0 }}"
+              onchange="this.form.submit()" checked>
+          <label class="custom-control-label" for="markasread_checked_{{ forloop.counter0 }}">Mark as read</label>
+        {% else %}
+          <input name="mark_as_read" type="checkbox" class="custom-control-input" id="markasread_unchecked_{{ forloop.counter0 }}"
+              onchange="this.form.submit()">
+          <label class="custom-control-label" for="markasread_unchecked_{{ forloop.counter0 }}">Mark as read</label>
+        {% endif %}
+      </div>
+    </form>
+        <a href="{% url 'tips_delete' pk=tip.id %}" class="btn btn-danger">Delete</a>
+  </li>
+  {% endfor %}
 </ul>
-
 
 {% endblock %}
