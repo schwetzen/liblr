@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}{{ tip.readable_type }} | {{ tip.title }}{% endblock %}
+
+{% block content %}
+
+{% if tip.has_been_read %}
+<div class="card border-success mb-4">
+  <div class="card-header border-success">{{ tip.readable_type }} <span class="text-muted">(Read)</span></div>
+{% else %}
+<div class="card mb-4">
+  <div class="card-header">{{ tip.readable_type }}</div>
+{% endif %}
+
+  <div class="card-body">
+    <p class="h5 card-title">{{ tip.title }}</p>
+    <p class="card-text">{{ tip.description }}</p>
+
+    {% if tip.content_type == 0 %}
+    <p class="card-text"><b>ISBN:</b> {{ tip.content.isbn }}</p>
+
+    {% elif tip.content_type == 1 %}
+    <p class="card-text"><b>URL:</b> <a href="{{ tip.content.url }}">{{ tip.content.url }}</a></p>
+    {% endif %}
+
+    <div class="row">
+      <div class="col col-12 col-md-4 col-lg-4">
+        <form class="form" method="PATCH" action="{% url 'tip' tip_id=tip.id %}">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{% url 'tip' tip_id=tip.id %}">
+          {% if tip.has_been_read %}
+          <input type="hidden" name="has_been_read" value="">
+          <button class="btn btn-block btn-warning" type="submit">Mark as unread</button>
+          {% else %}
+          <input type="hidden" name="has_been_read" value="1">
+          <button class="btn btn-block btn-secondary" type="submit">Mark as read</button>
+          {% endif %}
+        </form>
+      </div>
+      <div class="col col-12 col-md-4 col-lg-4">
+        <a class="btn btn-block btn-primary" href="#">Edit</a>
+      </div>
+      <div class="col col-12 col-md-4 col-lg-4">
+        <form class="form" method="DELETE" action="{% url 'tip' tip_id=tip.id %}">
+          {% csrf_token %}
+          <button class="btn btn-block btn-danger" type="submit">Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
