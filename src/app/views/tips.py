@@ -43,7 +43,10 @@ class ReadingTipDeleteView(DeleteView):
     success_url = reverse_lazy('tips')
 
     def delete():
-        # Do Something
+        tip_id = kwargs['pk']
+        tip_to_del = ReadingTip.objects.get(id=tip_id)
+        tip.is_deleted = True
+        tip.save()
         return reverse_lazy('tips')
 
 
