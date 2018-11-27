@@ -30,7 +30,7 @@
     <p class="card-text"><b>ISBN:</b> {{ tip.content.isbn }}</p>
 
     {% elif tip.content_type == 1 %}
-    <p class="card-text"><b>URL:</b> <a href="{{ tip.content.url }}">{{ tip.content.url }}</a></p>
+    <p class="card-text"><b>URL:</b> <a href="{{ tip.content.url }}" target="_blank">{{ tip.content.url }}</a></p>
     {% endif %}
 
     <div class="row">
