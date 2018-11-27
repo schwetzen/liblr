@@ -5,7 +5,7 @@
 
 {% block content %}
 <h1>Reading tips</h1>
-<a href="{% url 'tips_create' %}" class="btn btn-secondary">Add a reading tip</a>
+<a href="{% url 'tips_create' %}" class="btn btn-primary">Add a reading tip</a>
 
 <ul>
   {% for tip in object_list %}
@@ -29,7 +29,8 @@
         {% endif %}
       </div>
     </form>
-        <a href="{% url 'tips_delete' pk=tip.id %}" class="btn btn-danger">Delete</a>
+    <a href="{% url 'tips_edit' tip.id %}" class="btn btn-warning">Edit tip</a>
+    <a href="{% url 'tips_delete' pk=tip.id %}" class="btn btn-danger">Delete</a>
   </li>
   {% endif %}
   {% endfor %}

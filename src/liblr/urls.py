@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path
 
 from app.views import *
+from app.views.tips import ReadingTipEditView # had to add this import...
 
 urlpatterns = [
     # Admin urls
@@ -28,6 +29,7 @@ urlpatterns = [
     path('tips/<int:tip_id>/', ReadingTipListView.as_view(), name='tips_detail'),
     path('tips/create/', ReadingTipCreateView.as_view(), name='tips_create'),
     path('tips/delete/<int:pk>/', ReadingTipDeleteView.as_view(), name='tips_delete'),
+    path('tips/edit/<pk>/', ReadingTipEditView.as_view(), name='tips_edit'),
 
     # Authentication
     path('login/', LoginView.as_view(), name='login'),

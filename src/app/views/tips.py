@@ -37,7 +37,6 @@ class ReadingTipCreateView(mixins.LoginRequiredMixin, generic.CreateView):
 
         return redirect('tips')
 
-
 class ReadingTipDeleteView(DeleteView):
     model = ReadingTip
     success_url = reverse_lazy('tips')
@@ -52,6 +51,24 @@ class ReadingTipDeleteView(DeleteView):
         return self.post(*args, **kwargs)
 
 
+class ReadingTipEditView(mixins.LoginRequiredMixin, generic.UpdateView):
+    login_url = reverse_lazy('login')
+    form_class = ReadingTipCreateForm
+    template_name = 'reading_tip_edit_form.html'
 
+    def get_queryset(self):
+        return ReadingTip.objects.get(id=self.request.ReadingTip.id)
+
+    def post(self, tip_id, request, *args, **kwargs):
+       
+        rtip = ReadingTip.objects.get(id=tip_id)
+        form = ReadingTipCreateForm(self.request.post, initial={'title': rtip.title, 'content_type': rtip.content_type, 'description': rtip.description})
+
+        if not form.is_valid():
+            return render(request, self.template_name, {'form': form, 'tip_id': tip_id})
+
+        form.save()
+
+        return redirect('tips')
 
 
