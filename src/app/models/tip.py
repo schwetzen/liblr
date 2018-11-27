@@ -41,7 +41,7 @@ class ReadingTip(models.Model):
 
 class ReadingTipContentBook(models.Model):
     class Meta:
-        get_latest_by = ('-id',)
+        get_latest_by = ('id',)
 
     tip = models.ForeignKey(
         'ReadingTip',
@@ -53,7 +53,7 @@ class ReadingTipContentBook(models.Model):
 
 class ReadingTipContentWebsite(models.Model):
     class Meta:
-        get_latest_by = ('-id',)
+        get_latest_by = ('id',)
 
     tip = models.ForeignKey(
         'ReadingTip',
