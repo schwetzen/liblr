@@ -7,7 +7,7 @@ from django.db import transaction, IntegrityError
 from django.db.models import Q
 from django.http import HttpResponseServerError
 from app.models import ReadingTip, ReadingTipContentBook, ReadingTipContentWebsite
-from app.forms import ReadingTipCreateForm
+from app.forms import ReadingTipCreateForm, ReadingTipUpdateForm
 from app.views.dispatch import DispatchView
 
 
@@ -96,3 +96,76 @@ class ReadingTipCreateView(mixins.LoginRequiredMixin, generic.CreateView):
             return HttpResponseServerError('Whoopsie')
 
         return redirect('tips') if not tip else redirect('tip', tip_id=tip.id)
+
+
+class ReadingTipUpdateView(mixins.LoginRequiredMixin, DispatchView):
+    login_url = reverse_lazy('login')
+    template_name = 'reading_tip_form.html'
+
+    def get_tip(self, request, tip_id):
+        return get_object_or_404(
+            ReadingTip,
+            id=tip_id,
+            user=request.user,
+            is_deleted=False
+        )
+
+    def get_form(self, tip):
+        data = dict(
+            title=tip.title,
+            description=tip.description,
+            isbn=None if tip.content_type is not ReadingTip.BOOK else tip.content().isbn,
+            url=None if tip.content_type is not ReadingTip.WEBSITE else tip.content().url,
+        )
+        form = ReadingTipUpdateForm(data)
+
+        # TODO: Fix
+        if tip.content_type is ReadingTip.BOOK:
+            del form.fields['url']
+
+        elif tip.content_type is ReadingTip.WEBSITE:
+            del form.fields['isbn']
+
+        return form
+
+    def get(self, request, tip_id):
+        tip = self.get_tip(request, tip_id)
+        form = self.get_form(tip)
+
+        return render(request, self.template_name, {'form': form, 'tip': tip})
+
+    def patch(self, request, tip_id):
+        tip = self.get_tip(request, tip_id)
+        form = ReadingTipUpdateForm(request.POST)
+
+        if not form.is_valid():
+            return render(request, self.template_name, {'form': form, 'tip': tip})
+
+        data = form.cleaned_data
+
+        isbn = data.pop('isbn', None)
+        url = data.pop('url', None)
+
+        try:
+            with transaction.atomic():
+                tip.title = data.get('title', tip.title)
+                tip.description = data.get('description', tip.description)
+                tip.save()
+
+                # TODO: Fix
+                if tip.content_type is ReadingTip.BOOK and isbn:
+                    ReadingTipContentBook.objects.create(
+                        tip=tip,
+                        isbn=isbn
+                    )
+
+                elif tip.content_type is ReadingTip.WEBSITE and url:
+                    ReadingTipContentWebsite.objects.create(
+                        tip=tip,
+                        url=url
+                    )
+
+        except:
+            return HttpResponseServerError('Whoopsie')
+
+        return redirect('tip', tip_id=tip.id)

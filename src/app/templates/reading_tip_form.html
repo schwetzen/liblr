@@ -5,14 +5,28 @@
 
 {% block content %}
 
-<form method="post" action="{% url 'tips_create' %}">
+{% if tip %}
+{# Update if tip is passed in context... #}
+<h1>Update reading tip</h1>
+
+<form class="form" method="PATCH" action="{% url 'tips_update' tip_id=tip.id %}">
+{% else %}
+{# ...otherwise create. #}
+<h1>Create reading tip</h1>
+
+<form method="POST" action="{% url 'tips_create' %}">
+{% endif %}
   {% csrf_token %}
   <table>
     {{ form.as_table }}
   </table>
-  <button id="submit" class="btn btn-primary" type="submit">Create</button>
+  <button id="submit" class="btn btn-primary" type="submit">{% if tip %}Update{% else %}Create{% endif %}</button>
 </form>
 
+
+{# This is only required on create. #}
+{% if not tip %}
 <script src="{% static 'liblr/js/reading_tip.js' %}"></script>
+{% endif %}
 
 {% endblock %}
