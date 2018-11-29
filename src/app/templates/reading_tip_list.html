@@ -5,11 +5,7 @@
 
 {% block content %}
 <h1>Reading tips</h1>
-<<<<<<< HEAD
-<a href="{% url 'tips_create' %}" class="btn btn-primary">Add a reading tip</a>
-=======
 <a href="{% url 'tips_create' %}" class="btn btn-secondary mb-4">Add a reading tip</a>
->>>>>>> d625d98c73656bae2850b23d22fcc36f58b29891
 
 {% if not object_list %}
 <div class="alert alert-secondary" role="alert">
@@ -82,12 +78,7 @@
         {% endif %}
       </div>
     </form>
-<<<<<<< HEAD
-    <a href="{% url 'tips_edit' tip.id %}" class="btn btn-warning">Edit tip</a>
-    <a href="{% url 'tips_delete' pk=tip.id %}" class="btn btn-danger">Delete</a>
-=======
         <a href="{% url 'tip' tip_id=tip.id %}" class="btn btn-danger">Delete</a>
->>>>>>> d625d98c73656bae2850b23d22fcc36f58b29891
   </li>
   {% endif %}
   {% endfor %}

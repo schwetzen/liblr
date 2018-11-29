@@ -70,23 +70,7 @@ class ReadingTipCreateView(mixins.LoginRequiredMixin, generic.CreateView):
         if not form.is_valid():
             return render(request, self.template_name, {'form': form})
 
-<<<<<<< HEAD
-        ReadingTip.objects.create(user=self.request.user, **form.cleaned_data)
-
-        return redirect('tips')
-
-class ReadingTipDeleteView(DeleteView):
-    model = ReadingTip
-    success_url = reverse_lazy('tips')
-
-    def delete(self, request, pk):
-        tip = ReadingTip.objects.get(id=pk)
-        tip.is_deleted = True
-        tip.save()
-        return redirect('tips')
-=======
         data = form.cleaned_data
->>>>>>> d625d98c73656bae2850b23d22fcc36f58b29891
 
         isbn = data.pop('isbn', None)
         url = data.pop('url', None)
@@ -95,27 +79,6 @@ class ReadingTipDeleteView(DeleteView):
             with transaction.atomic():
                 tip = ReadingTip.objects.create(user=self.request.user, **data)
 
-<<<<<<< HEAD
-class ReadingTipEditView(mixins.LoginRequiredMixin, generic.UpdateView):
-    login_url = reverse_lazy('login')
-    form_class = ReadingTipCreateForm
-    template_name = 'reading_tip_edit_form.html'
-
-    def get_queryset(self):
-        return ReadingTip.objects.get(id=self.request.ReadingTip.id)
-
-    def post(self, tip_id, request, *args, **kwargs):
-       
-        rtip = ReadingTip.objects.get(id=tip_id)
-        form = ReadingTipCreateForm(self.request.post, initial={'title': rtip.title, 'content_type': rtip.content_type, 'description': rtip.description})
-
-        if not form.is_valid():
-            return render(request, self.template_name, {'form': form, 'tip_id': tip_id})
-
-        form.save()
-
-        return redirect('tips')
-=======
                 # TODO: Fix
                 if tip.content_type is ReadingTip.BOOK:
                     ReadingTipContentBook.objects.create(
@@ -128,7 +91,6 @@ class ReadingTipEditView(mixins.LoginRequiredMixin, generic.UpdateView):
                         tip=tip,
                         url=url
                     )
->>>>>>> d625d98c73656bae2850b23d22fcc36f58b29891
 
         except:
             return HttpResponseServerError('Whoopsie')
