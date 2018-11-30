@@ -38,7 +38,7 @@
 
         {% if user.is_authenticated %}
           <div class="col-sm-4 col-md-4 pull-right">
-            <form method="GET" class="navbar-form" role="search">
+            <form action="{% url 'tips_search' %}" method="GET" class="navbar-form" role="search">
               <div class="input-group">
                 <input type="text" class="form-control" name="q" placeholder="Search">
                 <span class="input-group-append">

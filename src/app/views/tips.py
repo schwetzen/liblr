@@ -1,13 +1,16 @@
-from django.views import generic
-from django.views.generic.edit import DeleteView
 from django.contrib.auth import mixins
-from django.shortcuts import redirect, render, get_object_or_404
-from django.urls import reverse_lazy
-from django.db import transaction, IntegrityError
+from django.db import transaction
 from django.db.models import Q
 from django.http import HttpResponseServerError
-from app.models import ReadingTip, ReadingTipContentBook, ReadingTipContentWebsite
+from django.shortcuts import redirect, render, get_object_or_404
+from django.urls import reverse_lazy
+from django.views import generic
+
+from functools import reduce
+import operator
+
 from app.forms import ReadingTipCreateForm, ReadingTipUpdateForm
+from app.models import ReadingTip, ReadingTipContentBook, ReadingTipContentWebsite
 from app.views.dispatch import DispatchView
 
 
@@ -57,6 +60,19 @@ class ReadingTipListView(mixins.LoginRequiredMixin, generic.ListView):
         tip.has_been_read = 'mark_as_read' in request.POST
         tip.save()
         return redirect('tips')
+
+
+class ReadingTipSearchListView(ReadingTipListView):
+    def get_queryset(self):
+        result = super(ReadingTipSearchListView, self).get_queryset()
+        query = self.request.GET.get('q')
+        if query:
+            query_list = query.split()
+            result = result.filter(
+                reduce(operator.or_, (Q(title__icontains=word) for word in query_list)) |
+                reduce(operator.or_, (Q(description__icontains=word) for word in query_list))
+            )
+        return result
 
 
 class ReadingTipCreateView(mixins.LoginRequiredMixin, generic.CreateView):
