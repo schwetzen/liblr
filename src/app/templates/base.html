@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'liblr/css/styles.css' %}" type="text/css">
 
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
     <title>{% block title %}Home{% endblock %}</title>
   </head>
   <body>
@@ -31,22 +34,34 @@
               <a class="nav-link" href="{% url 'tips' %}">Reading Tips</a>
             </li>
           {% endif %}
-          </ul>
+        </ul>
 
-          {% if user.is_authenticated %}
+        {% if user.is_authenticated %}
+          <div class="col-sm-4 col-md-4 pull-right">
+            <form method="GET" class="navbar-form" role="search">
+              <div class="input-group">
+                <input type="text" class="form-control" name="q" placeholder="Search">
+                <span class="input-group-append">
+                  <button type="submit" class="btn btn-outline-secondary">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </span>
+              </div>
+            </form>
+          </div>
           <form class="form-inline my-2 my-lg-0" action="{% url 'logout' %}" method="POST">
             {% csrf_token %}
             <button class="btn btn-danger my-2 my-sm-0" type="submit">Logout</button>
             <input type="hidden" name="next" value="{{ next }}">
           </form>
-          {% else %}
+        {% else %}
           <div class="form-row my-2 my-lg-0">
             <div class="col">
               <a class="btn btn-primary my-2 my-sm-0" href="{% url 'login' %}">Login</a>
               <a class="btn btn-primary my-2 my-sm-0" href="{% url 'register' %}">Register</a>
             </div>
           </div>
-          {% endif %}
+        {% endif %}
       </div>
     </nav>
     <div class="container">
