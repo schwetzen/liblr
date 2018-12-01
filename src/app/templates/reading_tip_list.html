@@ -1,15 +1,27 @@
 {% extends 'base.html' %}
 
-{% block title %}Tips{% endblock %}
+{% block title %}{% if title %}{{ title }}{% else %}Tips{% endif %}{% endblock %}
 {% block tips %}active{% endblock %}
 
 {% block content %}
-<h1>Reading tips</h1>
+<div class="my-4">
+  {% if search %}
+  <h1>Reading tips relating to: <span class="text-muted">{{ search }}</span></h1>
+  {% else %}
+  <h1>Reading tips</h1>
+  {% endif %}
+
+  {% if result_count %}
+  <p class="text-muted">Showing {{ result_count }} results</p>
+  {% endif %}
+</div>
+
+
 <a href="{% url 'tips_create' %}" class="btn btn-secondary mb-4">Add a reading tip</a>
 
 {% if not object_list %}
 <div class="alert alert-secondary" role="alert">
-  You don't have any reading tips.
+  No reading tips found.
 </div>
 {% endif %}
 
@@ -54,34 +66,5 @@
   </div>
 </div>
 {% endfor %}
-
-
-<!-- <ul>
-  {% for tip in object_list %}
-  {% if not tip.is_deleted %}
-  <li>
-    <b>Title:</b> {{ tip.title }}<br>
-    {% if tip.url %}<b>URL:</b> <a href="{{ tip.url }}">{{ tip.url }}</a> <br>{% endif %}
-    {% if tip.isbn %}<b>ISBN:</b> {{ tip.isbn }} <br>{% endif %}
-    <b>Description:</b> {{ tip.description }}
-    <form method="post" action="{% url 'tip' tip_id=tip.id %}">
-      {% csrf_token %}
-      <div class="custom-control custom-checkbox">
-        {% if tip.has_been_read %}
-          <input name="mark_as_read" type="checkbox" class="custom-control-input" id="markasread_checked_{{ forloop.counter0 }}"
-              onchange="this.form.submit()" checked>
-          <label class="custom-control-label" for="markasread_checked_{{ forloop.counter0 }}">Mark as read</label>
-        {% else %}
-          <input name="mark_as_read" type="checkbox" class="custom-control-input" id="markasread_unchecked_{{ forloop.counter0 }}"
-              onchange="this.form.submit()">
-          <label class="custom-control-label" for="markasread_unchecked_{{ forloop.counter0 }}">Mark as read</label>
-        {% endif %}
-      </div>
-    </form>
-        <a href="{% url 'tip' tip_id=tip.id %}" class="btn btn-danger">Delete</a>
-  </li>
-  {% endif %}
-  {% endfor %}
-</ul> -->
 
 {% endblock %}

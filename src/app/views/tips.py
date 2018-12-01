@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from functools import reduce
-import operator
+from operator import or_ as combine
 
 from app.forms import ReadingTipCreateForm, ReadingTipUpdateForm
 from app.models import ReadingTip, ReadingTipContentBook, ReadingTipContentWebsite
@@ -51,9 +51,24 @@ class ReadingTipListView(mixins.LoginRequiredMixin, generic.ListView):
     login_url = reverse_lazy('login')
     template_name = 'reading_tip_list.html'
 
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        query = self.request.GET.get('search', None)
+        context.update(title=f'Search | {query}' if query else 'Tips')
+        context.update(search=query)
+        context.update(result_count=self.get_queryset().count())
+        return context
+    
     def get_queryset(self):
-        q = Q(user=self.request.user) & Q(is_deleted=False)
-        return ReadingTip.objects.filter(q).order_by('-id')
+        authorized = Q(user=self.request.user) & Q(is_deleted=False)
+        queryset = ReadingTip.objects.filter(authorized)
+
+        query = self.request.GET.get('search', None)
+        if query:
+            contains = lambda w: Q(title__icontains=w) | Q(description__icontains=w)
+            queryset = queryset.filter(reduce(combine, map(contains, query.split())))
+
+        return queryset.order_by('-id')
 
     def post(self, request, tip_id):
         tip = ReadingTip.objects.get(id=tip_id)
@@ -64,8 +79,8 @@ class ReadingTipListView(mixins.LoginRequiredMixin, generic.ListView):
 
 class ReadingTipSearchListView(ReadingTipListView):
     def get_queryset(self):
-        result = super(ReadingTipSearchListView, self).get_queryset()
-        query = self.request.GET.get('q')
+        result = super().get_queryset()
+        query = self.request.GET.get('search')
         if query:
             query_list = query.split()
             result = result.filter(
