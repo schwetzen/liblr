@@ -42,6 +42,8 @@ class ReadingTip(models.Model):
         return (
             self.readable_type(),
             self.title,
+            self.content().isbn if hasattr(self.content(), 'isbn') else '',
+            self.content().url if hasattr(self.content(), 'url') else '',
             self.description,
         )
 

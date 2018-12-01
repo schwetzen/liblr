@@ -101,7 +101,7 @@ class ReadingTipListView(mixins.LoginRequiredMixin, generic.ListView):
         response['Content-Disposition'] = f'attachment; filename="{filename}.csv"'
 
         writer = csv.writer(response)
-        header = ('Type', 'Title', 'Description',)
+        header = ('Type', 'Title', 'ISBN', 'URL', 'Description',)
         rows = list(map(ReadingTip.export_fields, tips))
         writer.writerows((header, *rows))
 
