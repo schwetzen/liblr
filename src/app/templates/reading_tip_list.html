@@ -11,13 +11,31 @@
   <h1>Reading tips</h1>
   {% endif %}
 
-  {% if result_count %}
-  <p class="text-muted">Showing {{ result_count }} results</p>
+  {% if object_list %}
+  <p class="text-muted">Showing {{ object_list.count }} results</p>
   {% endif %}
 </div>
 
 
-<a href="{% url 'tips_create' %}" class="btn btn-secondary mb-4">Add a reading tip</a>
+<div class="mb-2">
+  <div class="form-group">
+    <form id="filterForm" method="GET" action="{% url 'tips' %}">
+      <label for="filter" class="h6 text-muted">Filter by:</label>
+      <select id="filter" class="form-control">
+        {% for name, option in view.filter_options %}
+        <option value="{{ name }}">{{ option }}</option>
+        {% endfor %}
+      </select>
+
+      {% if request.GET.search %}
+      <input id="search" type="hidden" name="search" value="{{ request.GET.search }}">
+      {% endif %}
+
+      <input id="filter_key" type="hidden" name="filter" value="{{ request.GET.filter }}">
+    </form>
+  </div>
+  <a href="{% url 'tips_create' %}" class="btn btn-secondary mb-4">Add a reading tip</a>
+</div>
 
 {% if not object_list %}
 <div class="alert alert-secondary" role="alert">
@@ -59,6 +77,14 @@
           {% else %}
           <input type="hidden" name="has_been_read" value="1">
           <button class="btn btn-block btn-secondary" type="submit">Mark as read</button>
+          {% endif %}
+
+          {% if request.GET.search %}
+          <input type="hidden" name="search" value="{{ request.GET.search }}">
+          {% endif %}
+
+          {% if request.GET.filter %}
+          <input type="hidden" name="filter" value="{{ request.GET.filter }}">
           {% endif %}
         </form>
       </div>

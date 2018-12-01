@@ -38,7 +38,14 @@ class ReadingTipView(mixins.LoginRequiredMixin, DispatchView):
             tip.has_been_read = bool(data.get('has_been_read'))
 
         tip.save()
-        return redirect(request.POST.get('next', 'tips'))
+
+        url = request.POST.get('next', 'tips')
+        params = [f'{k}={data.get(k)}' for k in ('filter', 'search',) if data.get(k)]
+
+        if params:
+            url += '?' + '&'.join(params)
+
+        return redirect(url)
 
     def delete(self, request, tip_id):
         tip = self.get_tip(request, tip_id)
@@ -51,17 +58,27 @@ class ReadingTipListView(mixins.LoginRequiredMixin, generic.ListView):
     login_url = reverse_lazy('login')
     template_name = 'reading_tip_list.html'
 
+    def filter_options(self):
+        return (
+            ('', 'All'),
+            ('read', 'Read'),
+            ('unread', 'Unread'),
+        )
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         query = self.request.GET.get('search', None)
         context.update(title=f'Search | {query}' if query else 'Tips')
         context.update(search=query)
-        context.update(result_count=self.get_queryset().count())
         return context
     
     def get_queryset(self):
         authorized = Q(user=self.request.user) & Q(is_deleted=False)
         queryset = ReadingTip.objects.filter(authorized)
+
+        filter_key = self.request.GET.get('filter', None)
+        if filter_key:
+            queryset = queryset.filter(has_been_read=filter_key == 'read')
 
         query = self.request.GET.get('search', None)
         if query:
@@ -69,12 +86,6 @@ class ReadingTipListView(mixins.LoginRequiredMixin, generic.ListView):
             queryset = queryset.filter(reduce(combine, map(contains, query.split())))
 
         return queryset.order_by('-id')
-
-    def post(self, request, tip_id):
-        tip = ReadingTip.objects.get(id=tip_id)
-        tip.has_been_read = 'mark_as_read' in request.POST
-        tip.save()
-        return redirect('tips')
 
 
 class ReadingTipSearchListView(ReadingTipListView):
