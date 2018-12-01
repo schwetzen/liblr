@@ -43,7 +43,7 @@
                 {% if request.GET.filter %}
                 <input id="key" type="hidden" name="filter" value="{{ request.GET.filter }}">
                 {% endif %}
-                <input type="text" class="form-control" name="search" placeholder="Search">
+                <input type="text" class="form-control" name="search" placeholder="Search" value="{{ request.GET.search }}">
                 <span class="input-group-append">
                   <button type="submit" class="btn btn-outline-secondary">
                     <i class="fas fa-search"></i>

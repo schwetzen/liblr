@@ -38,6 +38,13 @@ class ReadingTip(models.Model):
             except ReadingTipContentWebsite.DoesNotExist:
                 return None
 
+    def export_fields(self):
+        return (
+            self.readable_type(),
+            self.title,
+            self.description,
+        )
+
 
 class ReadingTipContentBook(models.Model):
     class Meta:

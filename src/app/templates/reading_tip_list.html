@@ -34,7 +34,14 @@
       <input id="filter_key" type="hidden" name="filter" value="{{ request.GET.filter }}">
     </form>
   </div>
-  <a href="{% url 'tips_create' %}" class="btn btn-secondary mb-4">Add a reading tip</a>
+  <div class="mb-4">
+    {% if request.GET.search or request.GET.filter %}
+    <a href="{{request.get_full_path}}&export" target="_blank" class="btn btn-secondary">Export as CSV</a>
+    {% else %}
+    <a href="{{request.get_full_path}}?export" target="_blank" class="btn btn-secondary">Export as CSV</a>
+    {% endif %}
+    <a href="{% url 'tips_create' %}" class="btn btn-secondary">Add a reading tip</a>
+  </div>
 </div>
 
 {% if not object_list %}

@@ -1,10 +1,11 @@
 from django.contrib.auth import mixins
 from django.db import transaction
 from django.db.models import Q
-from django.http import HttpResponseServerError
+from django.http import HttpResponse, HttpResponseServerError
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
+from django.utils import timezone
 
 from functools import reduce
 from operator import or_ as combine
@@ -87,18 +88,24 @@ class ReadingTipListView(mixins.LoginRequiredMixin, generic.ListView):
 
         return queryset.order_by('-id')
 
+    def get(self, request, *args, **kwargs):
+        if 'export' not in request.GET:
+            return super().get(request, *args, **kwargs)
 
-class ReadingTipSearchListView(ReadingTipListView):
-    def get_queryset(self):
-        result = super().get_queryset()
-        query = self.request.GET.get('search')
-        if query:
-            query_list = query.split()
-            result = result.filter(
-                reduce(operator.or_, (Q(title__icontains=word) for word in query_list)) |
-                reduce(operator.or_, (Q(description__icontains=word) for word in query_list))
-            )
-        return result
+        import csv
+
+        tips = self.get_queryset().all()
+        filename = f'tips {timezone.now()}'
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = f'attachment; filename="{filename}.csv"'
+
+        writer = csv.writer(response)
+        header = ('Type', 'Title', 'Description',)
+        rows = list(map(ReadingTip.export_fields, tips))
+        writer.writerows((header, *rows))
+
+        return response
 
 
 class ReadingTipCreateView(mixins.LoginRequiredMixin, generic.CreateView):
