@@ -1,7 +1,7 @@
 from app.features.steps.common_steps import *
 
 
-@when('the user presses login button')
+@when('the user presses the login button')
 def step_impl(ctx):
     ctx.browser.click_link_by_href('/login/')
 

@@ -18,7 +18,7 @@ def step_impl(ctx, email):
     User.objects.create_user(email=email, password=DEFAULT_PASSWORD)
 
 
-@given('a user account with the email "{email}" does not exists')
+@given('a user account with the email "{email}" does not exist')
 def step_impl(ctx, email):
     user = User.objects.filter(Q(email=email)).first()
     if user:
