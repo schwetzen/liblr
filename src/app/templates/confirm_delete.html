@@ -7,15 +7,22 @@
 {% if user.is_authenticated %}
 
 <div>
-
 	<h1>Are you sure you want to delete your account?</h1></br>
-	<a class="btn btn-warning" href="{{ views.success_url }}">No, take me back</a>
-	<form action="" method="POST">
-		{% csrf_token %}
+	<table>
+		<tr>
+			<td>
+			<a class="btn btn-warning" href="{% url 'index' %}">No, take me back</a>
+			</td>
+			<td>
+			<form action="" method="POST">
+				{% csrf_token %}
+		
+				<button type="submit" class="btn btn-danger">Delete</button>
 	
-		<button type="submit" class="btn btn-danger">Delete</button>
-	
-	</form>
+			</form>
+			</td>
+		</tr>
+	</table>
 </div>
 
 {% else %}
