@@ -1,11 +1,11 @@
 Feature: register an account
 
   Scenario: navigation to register page
-    Given user is at home page
+    Given the url is "/"
     When  user presses register button
-    Then  user is redirected to register page
+    Then  the url is "/register/"
 
   Scenario: register new account
-    Given user is at register page
+    Given the url is "/register/"
     When  user fills out and submits the register form
-    Then  a new user is registered
+    Then  the url is "/login/"
