@@ -52,6 +52,4 @@ def step_impl(ctx, url):
     assert ctx.browser.url == rel_url(ctx, url)
 
 
-@then('a user account with the email "{email}" exists')
-def step_impl(ctx, email):
-    assert len(User.objects.filter(Q(email=email))) == 1
+
