@@ -18,6 +18,18 @@ def step_impl(ctx, email):
     User.objects.create_user(email=email, password=DEFAULT_PASSWORD)
 
 
+@given('a user account with the email "{email}" does not exists')
+def step_impl(ctx, email):
+    user = User.objects.filter(Q(email=email)).first()
+    if user:
+        user.delete()
+
+
+@given('the user is logged out')
+def step_impl(ctx):
+    ctx.browser.visit(rel_url(ctx, '/logout/'))
+
+
 @given('the url is "{url}"')
 def step_impl(ctx, url=""):
     ctx.browser.visit(rel_url(ctx, url))
