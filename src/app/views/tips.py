@@ -41,7 +41,7 @@ class ReadingTipView(mixins.LoginRequiredMixin, DispatchView):
         tip.save()
 
         url = request.POST.get('next', 'tips')
-        params = [f'{k}={data.get(k)}' for k in ('filter', 'search',) if data.get(k)]
+        params = ['{key}={data}'.format(key=k, data=data.get(k)) for k in ('filter', 'search',) if data.get(k)]
 
         if params:
             url += '?' + '&'.join(params)
@@ -69,7 +69,7 @@ class ReadingTipListView(mixins.LoginRequiredMixin, generic.ListView):
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
         query = self.request.GET.get('search', None)
-        context.update(title=f'Search | {query}' if query else 'Tips')
+        context.update(title='Search | {q}'.format(q=query) if query else 'Tips')
         context.update(search=query)
         return context
     
@@ -95,10 +95,10 @@ class ReadingTipListView(mixins.LoginRequiredMixin, generic.ListView):
         import csv
 
         tips = self.get_queryset().all()
-        filename = f'tips {timezone.now()}'
+        filename = 'tips {zone}'.format(zone=timezone.now())
 
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = f'attachment; filename="{filename}.csv"'
+        response['Content-Disposition'] = 'attachment; filename="{f}.csv"'.format(f=filename)
 
         writer = csv.writer(response)
         header = ('Type', 'Title', 'ISBN', 'URL', 'Description',)
