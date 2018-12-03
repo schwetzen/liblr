@@ -7,7 +7,7 @@ Feature: register an account
 
   Scenario: register new account
     Given the url is "/register/"
-    When  the user fills the form with the email "example@example.com"
+    When  the user fills the register form with the email "example@example.com"
     And   the form is submitted
     Then  the url is "/login/"
     And   a user account with the email "example@example.com" exists
@@ -15,6 +15,6 @@ Feature: register an account
   Scenario: register existing account
     Given a user account with the email "example@example.com" exists
     And   the url is "/register/"
-    When  the user fills the form with the email "example@example.com"
+    When  the user fills the register form with the email "example@example.com"
     And   the form is submitted
     Then  the url is "/register/"
