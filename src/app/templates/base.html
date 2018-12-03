@@ -57,7 +57,7 @@
                 Menu
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownButton">
-              <a class="dropdown-item" href="{% url 'acc-settings' id=user.id %}">Account Settings</a>
+              <a class="dropdown-item" href="{% url 'acc_settings' id=user.id %}">Account Settings</a>
             </div>
           </div>
           <form class="form-inline my-2 my-lg-0" action="{% url 'logout' %}" method="POST">
