@@ -13,9 +13,8 @@ def rel_url(context, url=""):
 @given('a user account with the email "{email}" exists')
 def step_impl(ctx, email):
     user = User.objects.filter(Q(email=email)).first()
-    if user:
-        user.delete()
-    User.objects.create_user(email=email, password=DEFAULT_PASSWORD)
+    if not user:
+        User.objects.create_user(email=email, password=DEFAULT_PASSWORD)
 
 
 @given('a user account with the email "{email}" does not exist')

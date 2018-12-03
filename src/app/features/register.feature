@@ -6,8 +6,7 @@ Feature: register an account
     Then  the url is "/register/"
 
   Scenario: register new account
-    Given a user account with the email "example@example.com" does not exist
-    And   the url is "/register/"
+    Given the url is "/register/"
     When  the user fills the register form with the email "example@example.com"
     And   the form is submitted
     Then  the url is "/login/"
