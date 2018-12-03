@@ -11,3 +11,8 @@ def step_impl(ctx, email):
     ctx.browser.fill('email', email)
     ctx.browser.fill('password1', DEFAULT_PASSWORD)
     ctx.browser.fill('password2', DEFAULT_PASSWORD)
+
+
+@then('a user account with the email "{email}" exists')
+def step_impl(ctx, email):
+    assert len(User.objects.filter(Q(email=email))) == 1
