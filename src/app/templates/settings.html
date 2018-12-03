@@ -4,9 +4,19 @@
 
 {% block content %}
 
+{% if user.is_authenticated %}
+
 <div>
+
 	<h1>Account Settings</h1></br>
-    <a class="btn btn-danger" href="#">Delete my account</a>
+    <a class="btn btn-danger" href="{% url 'acc-delete' %}">Delete my account</a>
+
 </div>
+
+{% else %}
+
+	<h1>Please log in first...</h1>
+
+{% endif %}
 
 {% endblock %}

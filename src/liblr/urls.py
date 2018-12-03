@@ -29,6 +29,7 @@ urlpatterns = [
     path('tips/create/', ReadingTipCreateView.as_view(), name='tips_create'),
     path('tips/<int:tip_id>/update', ReadingTipUpdateView.as_view(), name='tips_update'),
     path('settings/<int:id>', AccountSettingsView.as_view(), name='acc-settings'),
+    path('settings/delete/', AccountDeleteView.as_view(), name='acc-delete'),
 
     # Authentication
     path('login/', LoginView.as_view(), name='login'),
