@@ -54,7 +54,7 @@
           </div>
           <form class="form-inline my-2 my-lg-0" action="{% url 'logout' %}" method="POST">
             {% csrf_token %}
-            <button class="btn btn-danger my-2 my-sm-0" type="submit">Logout</button>
+            <button name="logout" class="btn btn-danger my-2 my-sm-0" type="submit">Logout</button>
             <input type="hidden" name="next" value="{{ next }}">
           </form>
         {% else %}

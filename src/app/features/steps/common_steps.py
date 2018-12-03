@@ -30,6 +30,14 @@ def step_impl(ctx):
     ctx.browser.visit(rel_url(ctx, '/logout/'))
 
 
+@given('the user "{username}" is logged in')
+def step_impl(ctx, username):
+    ctx.browser.visit(rel_url(ctx, '/login/'))
+    ctx.browser.fill('username', username)
+    ctx.browser.fill('password', DEFAULT_PASSWORD)
+    ctx.browser.find_by_name('submit').first.click()
+
+
 @given('the url is "{url}"')
 def step_impl(ctx, url=""):
     ctx.browser.visit(rel_url(ctx, url))
