@@ -11,3 +11,10 @@ Feature: register an account
     And   the form is submitted
     Then  the url is "/login/"
     And   a user account with the email "example@example.com" exists
+
+  Scenario: register existing account
+    Given a user account with the email "example@example.com" exists
+    And   the url is "/register/"
+    When  the user fills the form with the email "example@example.com"
+    And   the form is submitted
+    Then  the url is "/register/"
