@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Account Settings{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+  <div>
+    <h1>Account Settings</h1>
+    <a class="btn btn-danger" href="{% url 'acc_delete' %}">Delete my account</a>
+  </div>
+{% else %}
+  <h1>Please log in first...</h1>
+{% endif %}
+
+{% endblock %}

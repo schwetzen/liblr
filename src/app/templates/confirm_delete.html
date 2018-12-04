@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Confirm account delete{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+
+<div>
+	<h1>Are you sure you want to delete your account?</h1></br>
+	<table>
+		<tr>
+			<td>
+			<a class="btn btn-warning" href="{% url 'index' %}">No, take me back</a>
+			</td>
+			<td>
+			<form action="" method="POST">
+				{% csrf_token %}
+		
+				<button type="submit" class="btn btn-danger">Delete</button>
+	
+			</form>
+			</td>
+		</tr>
+	</table>
+</div>
+
+{% else %}
+
+	<h1>Please log in first...</h1>
+
+{% endif %}
+
+{% endblock %}

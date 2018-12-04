@@ -18,4 +18,28 @@ $(document).ready(function() {
         break
     }
   })
+
+  // TODO: Move to separate file
+  // Automatically send request when filter key changes:
+  let form = document.getElementById('filterForm')
+  let filter = form.querySelector('#filter')
+
+  let selected = form.querySelector('#filter_key')
+  if (selected) {
+    filter.value = selected.value
+    form.removeChild(selected)
+  }
+
+  filter.onchange = () => {
+    let input = document.createElement('input')
+
+    if (filter.value) {
+      input.setAttribute('type', 'hidden')
+      input.setAttribute('name', 'filter')
+      input.setAttribute('value', filter.value)
+      form.appendChild(input)
+    }
+
+    form.submit()
+  }
 })

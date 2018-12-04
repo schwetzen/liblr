@@ -1,15 +1,52 @@
 {% extends 'base.html' %}
 
-{% block title %}Tips{% endblock %}
+{% block title %}{% if title %}{{ title }}{% else %}Tips{% endif %}{% endblock %}
 {% block tips %}active{% endblock %}
 
 {% block content %}
-<h1>Reading tips</h1>
-<a href="{% url 'tips_create' %}" class="btn btn-secondary mb-4">Add a reading tip</a>
+<div class="my-4">
+  {% if search %}
+  <h1>Reading tips relating to: <span class="text-muted">{{ search }}</span></h1>
+  {% else %}
+  <h1>Reading tips</h1>
+  {% endif %}
+
+  {% if object_list %}
+  <p class="text-muted">Showing {{ object_list.count }} results</p>
+  {% endif %}
+</div>
+
+
+<div class="mb-2">
+  <div class="form-group">
+    <form id="filterForm" method="GET" action="{% url 'tips' %}">
+      <label for="filter" class="h6 text-muted">Filter by:</label>
+      <select id="filter" class="form-control">
+        {% for name, option in view.filter_options %}
+        <option value="{{ name }}">{{ option }}</option>
+        {% endfor %}
+      </select>
+
+      {% if request.GET.search %}
+      <input id="search" type="hidden" name="search" value="{{ request.GET.search }}">
+      {% endif %}
+
+      <input id="filter_key" type="hidden" name="filter" value="{{ request.GET.filter }}">
+    </form>
+  </div>
+  <div class="mb-4">
+    {% if request.GET.search or request.GET.filter %}
+    <a href="{{request.get_full_path}}&export" target="_blank" class="btn btn-secondary">Export as CSV</a>
+    {% else %}
+    <a href="{{request.get_full_path}}?export" target="_blank" class="btn btn-secondary">Export as CSV</a>
+    {% endif %}
+    <a href="{% url 'tips_create' %}" class="btn btn-secondary">Add a reading tip</a>
+  </div>
+</div>
 
 {% if not object_list %}
 <div class="alert alert-secondary" role="alert">
-  You don't have any reading tips.
+  No reading tips found.
 </div>
 {% endif %}
 
@@ -48,40 +85,19 @@
           <input type="hidden" name="has_been_read" value="1">
           <button class="btn btn-block btn-secondary" type="submit">Mark as read</button>
           {% endif %}
+
+          {% if request.GET.search %}
+          <input type="hidden" name="search" value="{{ request.GET.search }}">
+          {% endif %}
+
+          {% if request.GET.filter %}
+          <input type="hidden" name="filter" value="{{ request.GET.filter }}">
+          {% endif %}
         </form>
       </div>
     </div>
   </div>
 </div>
 {% endfor %}
-
-
-<!-- <ul>
-  {% for tip in object_list %}
-  {% if not tip.is_deleted %}
-  <li>
-    <b>Title:</b> {{ tip.title }}<br>
-    {% if tip.url %}<b>URL:</b> <a href="{{ tip.url }}">{{ tip.url }}</a> <br>{% endif %}
-    {% if tip.isbn %}<b>ISBN:</b> {{ tip.isbn }} <br>{% endif %}
-    <b>Description:</b> {{ tip.description }}
-    <form method="post" action="{% url 'tip' tip_id=tip.id %}">
-      {% csrf_token %}
-      <div class="custom-control custom-checkbox">
-        {% if tip.has_been_read %}
-          <input name="mark_as_read" type="checkbox" class="custom-control-input" id="markasread_checked_{{ forloop.counter0 }}"
-              onchange="this.form.submit()" checked>
-          <label class="custom-control-label" for="markasread_checked_{{ forloop.counter0 }}">Mark as read</label>
-        {% else %}
-          <input name="mark_as_read" type="checkbox" class="custom-control-input" id="markasread_unchecked_{{ forloop.counter0 }}"
-              onchange="this.form.submit()">
-          <label class="custom-control-label" for="markasread_unchecked_{{ forloop.counter0 }}">Mark as read</label>
-        {% endif %}
-      </div>
-    </form>
-        <a href="{% url 'tip' tip_id=tip.id %}" class="btn btn-danger">Delete</a>
-  </li>
-  {% endif %}
-  {% endfor %}
-</ul> -->
 
 {% endblock %}

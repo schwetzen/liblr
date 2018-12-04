@@ -1,13 +1,17 @@
-from django.views import generic
-from django.views.generic.edit import DeleteView
 from django.contrib.auth import mixins
+from django.db import transaction
+from django.db.models import Q
+from django.http import HttpResponse, HttpResponseServerError
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
-from django.db import transaction, IntegrityError
-from django.db.models import Q
-from django.http import HttpResponseServerError
-from app.models import ReadingTip, ReadingTipContentBook, ReadingTipContentWebsite
+from django.views import generic
+from django.utils import timezone
+
+from functools import reduce
+from operator import or_ as combine
+
 from app.forms import ReadingTipCreateForm, ReadingTipUpdateForm
+from app.models import ReadingTip, ReadingTipContentBook, ReadingTipContentWebsite
 from app.views.dispatch import DispatchView
 
 
@@ -35,7 +39,14 @@ class ReadingTipView(mixins.LoginRequiredMixin, DispatchView):
             tip.has_been_read = bool(data.get('has_been_read'))
 
         tip.save()
-        return redirect(request.POST.get('next', 'tips'))
+
+        url = request.POST.get('next', 'tips')
+        params = ['{key}={data}'.format(key=k, data=data.get(k)) for k in ('filter', 'search',) if data.get(k)]
+
+        if params:
+            url += '?' + '&'.join(params)
+
+        return redirect(url)
 
     def delete(self, request, tip_id):
         tip = self.get_tip(request, tip_id)
@@ -48,15 +59,53 @@ class ReadingTipListView(mixins.LoginRequiredMixin, generic.ListView):
     login_url = reverse_lazy('login')
     template_name = 'reading_tip_list.html'
 
-    def get_queryset(self):
-        q = Q(user=self.request.user) & Q(is_deleted=False)
-        return ReadingTip.objects.filter(q).order_by('-id')
+    def filter_options(self):
+        return (
+            ('', 'All'),
+            ('read', 'Read'),
+            ('unread', 'Unread'),
+        )
 
-    def post(self, request, tip_id):
-        tip = ReadingTip.objects.get(id=tip_id)
-        tip.has_been_read = 'mark_as_read' in request.POST
-        tip.save()
-        return redirect('tips')
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        query = self.request.GET.get('search', None)
+        context.update(title='Search | {q}'.format(q=query) if query else 'Tips')
+        context.update(search=query)
+        return context
+    
+    def get_queryset(self):
+        authorized = Q(user=self.request.user) & Q(is_deleted=False)
+        queryset = ReadingTip.objects.filter(authorized)
+
+        filter_key = self.request.GET.get('filter', None)
+        if filter_key:
+            queryset = queryset.filter(has_been_read=filter_key == 'read')
+
+        query = self.request.GET.get('search', None)
+        if query:
+            contains = lambda w: Q(title__icontains=w) | Q(description__icontains=w)
+            queryset = queryset.filter(reduce(combine, map(contains, query.split())))
+
+        return queryset.order_by('-id')
+
+    def get(self, request, *args, **kwargs):
+        if 'export' not in request.GET:
+            return super().get(request, *args, **kwargs)
+
+        import csv
+
+        tips = self.get_queryset().all()
+        filename = 'tips {zone}'.format(zone=timezone.now())
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="{f}.csv"'.format(f=filename)
+
+        writer = csv.writer(response)
+        header = ('Type', 'Title', 'ISBN', 'URL', 'Description',)
+        rows = list(map(ReadingTip.export_fields, tips))
+        writer.writerows((header, *rows))
+
+        return response
 
 
 class ReadingTipCreateView(mixins.LoginRequiredMixin, generic.CreateView):
