@@ -11,6 +11,8 @@ Head over to https://schwetzen.com to begin.
 
 ## Accounts
 
+
+
 The software currently requires you register and log in using an email address.
 We do not send you any verification email, it is just used as a username.
 
