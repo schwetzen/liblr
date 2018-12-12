@@ -15,8 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
 from app.views import *
+
 
 urlpatterns = [
     # Admin urls
@@ -30,6 +30,8 @@ urlpatterns = [
     path('tips/<int:tip_id>/update', ReadingTipUpdateView.as_view(), name='tips_update'),
     path('settings/<int:id>', AccountSettingsView.as_view(), name='acc_settings'),
     path('settings/delete/', AccountDeleteView.as_view(), name='acc_delete'),
+    path('calendar/', CalendarView.as_view(), name='calendar'),
+    path('calendar/events', EventView.as_view(), name='events'),
 
     # Authentication
     path('login/', LoginView.as_view(), name='login'),
