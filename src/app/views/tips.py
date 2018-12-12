@@ -163,6 +163,8 @@ class ReadingTipUpdateView(mixins.LoginRequiredMixin, DispatchView):
         data = dict(
             title=tip.title,
             description=tip.description,
+            start_date=tip.start_date,
+            end_date=tip.end_date,
             isbn=None if tip.content_type is not ReadingTip.BOOK else tip.content().isbn,
             url=None if tip.content_type is not ReadingTip.WEBSITE else tip.content().url,
         )
@@ -199,6 +201,8 @@ class ReadingTipUpdateView(mixins.LoginRequiredMixin, DispatchView):
             with transaction.atomic():
                 tip.title = data.get('title', tip.title)
                 tip.description = data.get('description', tip.description)
+                tip.start_date = data.get('start_date', tip.start_date)
+                tip.end_date = None if not tip.start_date else data.get('end_date', tip.end_date)
                 tip.save()
 
                 # TODO: Fix
