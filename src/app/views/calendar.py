@@ -1,7 +1,10 @@
 from django.contrib.auth import mixins
 from django.http import JsonResponse
 from django.views import generic
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
+from django.db.models import Q
+
+from app.models import ReadingTip
 
 
 class CalendarView(mixins.LoginRequiredMixin, generic.TemplateView):
@@ -12,16 +15,21 @@ class EventView(mixins.LoginRequiredMixin, generic.View):
     login_url = reverse_lazy('login')
 
     def get(self, request):
-        from django.db.models import Q
-
         start = request.GET.get('start', None)
         end = request.GET.get('end', None)
 
-        objects = ...
+        q = (Q(start_date__gte=start) | Q(end_date__gte=start)) & (Q(start_date__lte=end) | Q(end_date__lte=end))
 
-        events = [
-            {'title': 'lorem ipsum', 'start': '2018-12-03'},
-            {'title': 'dolor sit amet', 'start': '2018-12-07'},
-        ]
+        tips = ReadingTip.objects.filter(q, user=request.user, is_deleted=False)
+
+        def mapping(tip):
+            return dict(
+                title=tip.title,
+                start=tip.start_date,
+                end=tip.end_date,
+                url=reverse('tip', kwargs={'tip_id': tip.id})
+            )
+
+        events = list(map(mapping, tips))
 
         return JsonResponse(events, safe=False)
