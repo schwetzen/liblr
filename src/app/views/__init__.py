@@ -5,3 +5,4 @@ from app.views.tips import (
     ReadingTipView, ReadingTipListView,
     ReadingTipCreateView, ReadingTipUpdateView
 )
+from app.views.calendar import CalendarView, EventView

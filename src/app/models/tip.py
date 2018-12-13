@@ -18,6 +18,8 @@ class ReadingTip(models.Model):
     content_type = models.IntegerField(choices=CONTENT_TYPE)
     title = models.CharField(verbose_name='Title', max_length=30)
     description = models.TextField(verbose_name='Description', blank=True)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
     has_been_read = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
 

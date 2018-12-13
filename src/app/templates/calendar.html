@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block links %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.print.css" media="print">
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function () {
+    $('#calendar').fullCalendar({
+      header: {
+        left: 'today',
+        center: 'title',
+        right: 'prev,next'
+      },
+      footer: {
+        center: 'prevYear,prev,next,nextYear'
+      },
+      dayClick: function (date, event, view, asd) {
+        console.log('clicked', date.format(), asd)
+      },
+      events: {
+        url: '/calendar/events',
+        type: 'GET',
+        error: function() {
+          console.log('failed fetching events')
+        },
+        color: 'orange'
+      },
+    })
+  })
+</script>
+{% endblock %}
+
+{% block title %}{% if title %}{{ title }}{% else %}Calendar{% endif %}{% endblock %}
+{% block calendar %}active{% endblock %}
+
+{% block content %}
+<div id="calendar"></div>
+{% endblock %}
