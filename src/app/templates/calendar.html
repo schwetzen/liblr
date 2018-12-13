@@ -13,9 +13,9 @@
   $(document).ready(function () {
     $('#calendar').fullCalendar({
       header: {
-        left: 'today',
+        left: 'prev,next,today',
         center: 'title',
-        right: 'prev,next'
+        right: 'agendaWeek,month,listYear'
       },
       footer: {
         center: 'prevYear,prev,next,nextYear'
@@ -31,6 +31,8 @@
         },
         color: 'orange'
       },
+      displayEventTime: false,
+      weekNumbers: true,
     })
   })
 </script>
