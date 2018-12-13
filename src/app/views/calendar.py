@@ -8,6 +8,7 @@ from app.models import ReadingTip
 
 
 class CalendarView(mixins.LoginRequiredMixin, generic.TemplateView):
+    login_url = reverse_lazy('login')
     template_name = 'calendar.html'
 
 
