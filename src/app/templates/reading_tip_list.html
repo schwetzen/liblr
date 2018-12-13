@@ -1,5 +1,34 @@
 {% extends 'base.html' %}
 
+{% block scripts %}
+<script type="text/javascript">
+  $(document).ready(function () {
+    // Automatically send request when filter key changes:
+    let form = document.getElementById('filterForm')
+    let filter = form.querySelector('#filter')
+
+    let selected = form.querySelector('#filter_key')
+    if (selected) {
+      filter.value = selected.value
+      form.removeChild(selected)
+    }
+
+    filter.onchange = () => {
+      let input = document.createElement('input')
+
+      if (filter.value) {
+        input.setAttribute('type', 'hidden')
+        input.setAttribute('name', 'filter')
+        input.setAttribute('value', filter.value)
+        form.appendChild(input)
+      }
+
+      form.submit()
+    }
+  })
+</script>
+{% endblock %}
+
 {% block title %}{% if title %}{{ title }}{% else %}Tips{% endif %}{% endblock %}
 {% block tips %}active{% endblock %}
 
