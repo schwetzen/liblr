@@ -1,5 +1,6 @@
 from behave import *
 from app.models.user import User
+from app.models.tip import ReadingTip
 from django.db.models import Q
 
 
