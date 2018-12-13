@@ -34,3 +34,7 @@ def step_impl(ctx, title="", content_type="", desc="", url=""):
         or ctx.browser.is_element_present_by_text(url)
         )
 
+@then('the page contains the text "{text}"')
+def impl(ctx, text=""):
+    assert ctx.browser.is_element_present_by_text(text)
+

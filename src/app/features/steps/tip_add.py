@@ -13,6 +13,12 @@ def step_impl(ctx, title, desc, url):
     ctx.browser.fill("description", desc)
     ctx.browser.fill("url", url)
 
+@when('the Book creation form is filled with the title "{title}", description "{desc}" and isbn "{isbn}"')
+def step_impl(ctx, title, desc, isbn):
+    ctx.browser.fill("title", title)
+    ctx.browser.find_option_by_text("Book").click()
+    ctx.browser.fill("description", desc)
+    ctx.browser.fill("isbn", isbn)
 
 @when('the tip is submitted')
 def step_impl(ctx):

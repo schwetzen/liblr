@@ -3,7 +3,7 @@ from django.core.management import call_command
 
 
 def before_all(context):
-    context.browser = Browser('firefox', headless=True)
+    context.browser = Browser('chrome', headless=False)
 
 
 def after_all(context):
