@@ -38,4 +38,17 @@ Feature: Tips listing
  
     	Then  the page contains a tip with title "test2", type "Website", desc "test2" and url "https://www.youtube.com"
    	
+
+	@dev
+	Scenario: The user can search for tips
+    	Given  a user account with the email "example@example.com" exists
+    	And    the user "example@example.com" is logged in
+    	And    the database is initialized for tips_can_be_searched
+
+		When   the user enters a searchword "google"
+		And    presses the search button
+
+		Then   the user will be presented with tips including keyword "google"
+
+
  
