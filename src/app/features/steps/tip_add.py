@@ -6,7 +6,7 @@ def step_impl(ctx):
     ctx.browser.find_by_text('Add a reading tip').first.click()
 
 
-@when('enters title "{title}", selects Website, enters description "{desc}" and enters url "{url}"')
+@when('the Website creation form is filled with the title "{title}", description "{desc}" and url "{url}"')
 def step_impl(ctx, title, desc, url):
     ctx.browser.fill("title", title)
     ctx.browser.find_option_by_text("Website").click()

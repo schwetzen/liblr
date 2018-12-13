@@ -5,6 +5,6 @@ Feature: add a tip
     And   the user "example@example.com" is logged in
     And   the url is "/tips/"
     When  the user presses the button to add new reading tip
-    And   enters title "test", selects Website, enters description "test" and enters url "https://www.google.fi"
+    And   the Website creation form is filled with the title "test", description "test" and url "https://www.google.fi"
     And   the tip is submitted
     Then  the page contains the added tip with title "test"

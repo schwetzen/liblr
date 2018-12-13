@@ -14,7 +14,7 @@ def step_impl(ctx):
     ctx.browser.find_by_text('Edit').first.click()
 
 
-@when('enters title "{title}", enters description "{desc}" and enters url "{url}" into the edit form')
+@when('the Website edit form is filled with the title "{title}", description "{desc}" and url "{url}"')
 def step_impl(ctx, title, desc, url):
     ctx.browser.fill("title", title)
     ctx.browser.fill("description", desc)
