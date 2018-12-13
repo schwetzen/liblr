@@ -15,6 +15,20 @@ UNAME         := $(shell uname)
 PATH          := $(shell echo $$PATH)
 
 
+.SILENT: $(VENV)
+$(VENV):
+ifeq ($(shell which python3),)
+	$(error "Missing python3")
+else
+	$(call colorize,3,"Setting up venv...")
+	python3 -m venv venv
+endif
+
+
+$(PIP): $(VENV)
+$(PYTHON): $(VENV)
+
+
 all: check
 
 
@@ -89,6 +103,7 @@ endif
 .SILENT: requirements
 requirements: $(PIP)
 	$(call colorize,3,"Updating requirements...")
+	$(PIP) install --upgrade pip --quiet
 	$(PIP) install -r $(REQUIREMENTS) --quiet
 	$(call colorize,2,"Done")
 
