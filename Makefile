@@ -15,6 +15,9 @@ UNAME         := $(shell uname)
 PATH          := $(shell echo $$PATH)
 
 
+all: check
+
+
 .SILENT: $(VENV)
 $(VENV):
 ifeq ($(shell which python3),)
@@ -27,9 +30,6 @@ endif
 
 $(PIP): $(VENV)
 $(PYTHON): $(VENV)
-
-
-all: check
 
 
 .PHONY: check
