@@ -11,8 +11,6 @@ Head over to https://schwetzen.com to begin.
 
 ## Account, Email & GDPR
 
-
-
 The software currently requires you register and log in using an email address.
 We do not send you any emails, it is just used as a username.
 
@@ -21,6 +19,11 @@ At the moment there is no way for you to delete or inspect your account or data.
 If you wish to do so, please contact daniel.riissanen[at]gmail.com.
 
 ## How do I run it?
+
+**Requirements**
+
+- Python 3.5+
+- `venv` as the virtual environment
 
 The production site is https://schwetzen.com, but if you wish to test the
 software yourself, feel free to clone this repository
