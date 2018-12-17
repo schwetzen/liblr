@@ -22,7 +22,7 @@ If you wish to do so, please contact daniel.riissanen[at]gmail.com.
 
 **Requirements**
 
-- Python 3.5+
+- Python 3.5+ (3.7 recommended)
 - `venv` as the virtual environment
 
 The production site is https://schwetzen.com, but if you wish to test the
