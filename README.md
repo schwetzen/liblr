@@ -9,6 +9,8 @@ centralized place.
 
 Head over to https://schwetzen.com to begin.
 
+For the project report, see [REPORT.md](https://github.com/schwetzen/liblr/blob/master/REPORT.md).
+
 ## Account, Email & GDPR
 
 The software currently requires you register and log in using an email address.
@@ -54,3 +56,4 @@ Helsinki and this section contains the necessary documents and links for that.
 - [Sprint 3 backlog](https://docs.google.com/spreadsheets/d/1nEZxifxYrckJiFKRFn_WfPdEwU8H2xoJn6IvMP-y_3o/edit?usp=sharing)
 - [Sprint 4 backlog](https://docs.google.com/spreadsheets/d/1BbaP8Sp3omkdu1VbbiKDqqaruQUbwbUS7gOdtrMv4Ps/edit?usp=sharing)
 - [Burndown chart](https://docs.google.com/spreadsheets/d/1Gn-kzJeadceD5dZH-4P0hI_JCB0PMYjwW80lVVSa_AQ/edit?usp=sharing)
+- [Project report](https://github.com/schwetzen/liblr/blob/master/REPORT.md)
